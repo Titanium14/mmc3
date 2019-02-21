@@ -45,7 +45,7 @@ class NavBar extends Component {
                 <NavLink href="/Profile">My Profile</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/Login">Sign In</NavLink>
+                <NavLink href="/Account">Sign In</NavLink>
               </NavItem>
             </Nav>
           </Collapse>

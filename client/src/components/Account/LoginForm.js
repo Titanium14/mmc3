@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Col,
   Button,
   Form,
   FormGroup,
@@ -12,54 +11,73 @@ import {
 } from 'reactstrap';
 
 class LoginForm extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: '',
+      password: '',
+      errors: {}
+    };
+
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    const user = {
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    console.log(user);
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
   render() {
     return (
-      <Card className="m-element-spacing">
-        <CardHeader className="s-notebook-bind">
-          <h2>Login form</h2>
-        </CardHeader>
-        <CardBody className="s-notebook-body">
-          <div className="s-vertical-lines" />
-          <Form>
+      <Card>
+        <CardHeader tag="h2">Login form</CardHeader>
+        <CardBody>
+          <Form onSubmit={this.onSubmit}>
             <FormGroup row>
               <Input
-                className="s-email-placement"
                 type="email"
+                placeholder="Email Address"
                 name="email"
-                id="email"
-                placeholder="Enter email..."
+                value={this.state.email}
+                onChange={this.onChange}
               />
-              <FormFeedback className="s-error-placement">
+              {/* <FormFeedback className="s-error-placement">
                 Incorrect email. Please enter an existing email.
-              </FormFeedback>
+              </FormFeedback> */}
             </FormGroup>
             <FormGroup row>
               <Input
-                className="s-pass-placement"
                 type="password"
-                name="pass"
-                id="pass"
-                placeholder="Enter password..."
+                placeholder="Password"
+                name="password"
+                value={this.state.password}
+                onChange={this.onChange}
               />
-              <FormFeedback className="s-error-placement">
+              {/* <FormFeedback className="s-error-placement">
                 Incorrect password. Please enter the correct password.
-              </FormFeedback>
+              </FormFeedback> */}
             </FormGroup>
             <FormGroup row>
-              <Col md={3}>
-                <Button
-                  href="../Register"
-                  color="link"
-                  className="s-account-placement">
-                  Create account
-                </Button>
-              </Col>
-              <Col md={6} />
-              <Col md={3}>
-                <Button color="primary" className="s-submit-placement">
-                  Submit
-                </Button>
-              </Col>
+              <Button color="primary" block>
+                Submit
+              </Button>
+            </FormGroup>
+            <FormGroup row>
+              <Button href="../Register" color="link" block>
+                Create account
+              </Button>
             </FormGroup>
           </Form>
         </CardBody>

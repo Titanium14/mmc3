@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Card, CardBody } from 'reactstrap';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import CreateButton from './CreateButton';
 
