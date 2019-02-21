@@ -1,0 +1,28 @@
+.s-img-color {
+  color: white;
+}
+
+.s-btn-color {
+  background-color: #7b69eb;
+}
+
+.s-weight {
+  font-weight: 700;
+}
+
+.s-positioning {
+  margin-top: 2px;
+}
+
+.s-btn-responsive {
+  max-width: 100%;
+}
+
+.s-img-positioning {
+  position: relative;
+  top: -5px;
+}
+
+.s-rotate-arrow {
+  transform: rotate(180deg);
+}
