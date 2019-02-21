@@ -15,7 +15,11 @@ class Account extends Component {
     };
   }
 
-  onFormSwitch() {}
+  onFormSwitch() {
+    this.state.accountFlag === 'login'
+      ? this.setState({ accountFlag: 'register' })
+      : this.setState({ accountFlag: 'login' });
+  }
 
   render() {
     return (
@@ -23,9 +27,9 @@ class Account extends Component {
         <Col />
         <Col lg={4}>
           {this.state.accountFlag === 'login' ? (
-            <LoginForm />
+            <LoginForm switchForm={this.onFormSwitch.bind(this)} />
           ) : (
-            <RegistrationForm />
+            <RegistrationForm switchForm={this.onFormSwitch.bind(this)} />
           )}
         </Col>
         <Col />

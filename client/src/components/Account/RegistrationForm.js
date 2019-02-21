@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Col,
   Button,
   Form,
   FormGroup,
@@ -10,74 +9,116 @@ import {
   CardBody,
   FormFeedback
 } from 'reactstrap';
+import axios from 'axios';
+import PropTypes from 'prop-types';
 
 class RegistrationForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      email: '',
+      password: '',
+      password2: '',
+      errors: {}
+    };
+
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    const newUser = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password2: this.state.password2
+    };
+
+    axios
+      .post('/api/users/register', newUser)
+      .then(res => console.log(res.data))
+      .catch(err => this.setState({ errors: err.response.data }));
+    // .catch(err => console.log(err.response.data));
+  }
+
   render() {
+    const { errors } = this.state;
+
     return (
-      <Card className="m-element-spacing">
-        <CardHeader className="s-notebook-bind">
-          <h2>Registration form</h2>
+      <Card>
+        <CardHeader className="text-center" tag="h2">
+          Sign In
         </CardHeader>
-        <CardBody className="s-notebook-body">
-          <div className="s-vertical-lines s-vertical-reg" />
-          <Form>
+        <CardBody>
+          <Form noValidate onSubmit={this.onSubmit}>
             <FormGroup row>
               <Input
-                className="s-email-placement"
+                type="text"
+                className={errors.name ? 'is-invalid' : ''}
+                placeholder="Name"
+                name="name"
+                value={this.state.name}
+                onChange={this.onChange}
+              />
+              <FormFeedback>{errors.name}</FormFeedback>
+            </FormGroup>
+            <FormGroup row>
+              <Input
                 type="email"
+                className={errors.email ? 'is-invalid' : ''}
+                placeholder="Email Address"
                 name="email"
-                id="email"
-                placeholder="Enter new email..."
+                value={this.state.email}
+                onChange={this.onChange}
               />
-              <FormFeedback className="s-error-placement">
-                Incorrect email. Please enter an existing email.
-              </FormFeedback>
+              <FormFeedback>{errors.email}</FormFeedback>
             </FormGroup>
             <FormGroup row>
               <Input
-                className="s-pass-placement"
                 type="password"
-                name="pass"
-                id="pass"
-                placeholder="Enter new password..."
+                className={errors.password ? 'is-invalid' : ''}
+                placeholder="Password"
+                name="password"
+                value={this.state.password}
+                onChange={this.onChange}
               />
-              <FormFeedback className="s-error-placement">
-                Incorrect password. Please enter the correct password.
-              </FormFeedback>
+              <FormFeedback>{errors.password}</FormFeedback>
             </FormGroup>
             <FormGroup row>
               <Input
-                className="s-pass-placement"
                 type="password"
-                name="pass"
-                id="pass"
-                placeholder="Confirm password..."
+                className={errors.password2 ? 'is-invalid' : ''}
+                placeholder="Confirm password"
+                name="password2"
+                value={this.state.password2}
+                onChange={this.onChange}
               />
-              <FormFeedback className="s-error-placement">
-                Please enter the matching password.
-              </FormFeedback>
+              <FormFeedback>{errors.password2}</FormFeedback>
             </FormGroup>
             <FormGroup row>
-              <Col md={3}>
-                <Button
-                  href="../Login"
-                  color="link"
-                  className="s-account-placement">
-                  Have an account?
-                </Button>
-              </Col>
-              <Col md={6} />
-              <Col md={3}>
-                <Button color="primary" className="s-submit-placement">
-                  Submit
-                </Button>
-              </Col>
+              <Button color="primary" block>
+                Submit
+              </Button>
             </FormGroup>
           </Form>
+          <Button onClick={this.props.switchForm} color="link" block>
+            Have an account?
+          </Button>
         </CardBody>
       </Card>
     );
   }
 }
+
+RegistrationForm.propTypes = {
+  switchForm: PropTypes.func.isRequired
+};
 
 export default RegistrationForm;

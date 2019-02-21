@@ -9,6 +9,8 @@ import {
   CardBody,
   FormFeedback
 } from 'reactstrap';
+import axios from 'axios';
+import PropTypes from 'prop-types';
 
 class LoginForm extends Component {
   constructor(props) {
@@ -33,6 +35,11 @@ class LoginForm extends Component {
     };
 
     console.log(user);
+
+    axios
+      .post('/api/users/login', user)
+      .then(res => console.log(res.data))
+      .catch(err => this.setState({ errors: err.response.data }));
   }
 
   onChange(e) {
@@ -40,50 +47,54 @@ class LoginForm extends Component {
   }
 
   render() {
+    const { errors } = this.state;
+
     return (
       <Card>
-        <CardHeader tag="h2">Login form</CardHeader>
+        <CardHeader className="text-center" tag="h2">
+          Log In
+        </CardHeader>
         <CardBody>
           <Form onSubmit={this.onSubmit}>
             <FormGroup row>
               <Input
                 type="email"
+                className={errors.email ? 'is-invalid' : ''}
                 placeholder="Email Address"
                 name="email"
                 value={this.state.email}
                 onChange={this.onChange}
               />
-              {/* <FormFeedback className="s-error-placement">
-                Incorrect email. Please enter an existing email.
-              </FormFeedback> */}
+              <FormFeedback>{errors.email}</FormFeedback>
             </FormGroup>
             <FormGroup row>
               <Input
                 type="password"
+                className={errors.password ? 'is-invalid' : ''}
                 placeholder="Password"
                 name="password"
                 value={this.state.password}
                 onChange={this.onChange}
               />
-              {/* <FormFeedback className="s-error-placement">
-                Incorrect password. Please enter the correct password.
-              </FormFeedback> */}
+              <FormFeedback>{errors.password}</FormFeedback>
             </FormGroup>
             <FormGroup row>
               <Button color="primary" block>
                 Submit
               </Button>
             </FormGroup>
-            <FormGroup row>
-              <Button href="../Register" color="link" block>
-                Create account
-              </Button>
-            </FormGroup>
           </Form>
+          <Button onClick={this.props.switchForm} color="link" block>
+            Create account
+          </Button>
         </CardBody>
       </Card>
     );
   }
 }
+
+LoginForm.propTypes = {
+  switchForm: PropTypes.func.isRequired
+};
 
 export default LoginForm;
