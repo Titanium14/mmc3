@@ -26,11 +26,12 @@ class Account extends Component {
       <Row>
         <Col />
         <Col lg={4}>
-          {this.state.accountFlag === 'login' ? (
-            <LoginForm switchForm={this.onFormSwitch.bind(this)} />
-          ) : (
-            <RegistrationForm switchForm={this.onFormSwitch.bind(this)} />
-          )}
+          {this.state.accountFlag === 'login' &&
+          this.props.location.hash === '#login' ? (
+              <LoginForm switchForm={this.onFormSwitch.bind(this)} />
+            ) : (
+              <RegistrationForm switchForm={this.onFormSwitch.bind(this)} />
+            )}
         </Col>
         <Col />
       </Row>

@@ -84,7 +84,7 @@ class LoginForm extends Component {
               </Button>
             </FormGroup>
           </Form>
-          <Button onClick={this.props.switchForm} color="link" block>
+          <Button href="#signup" onClick={this.props.switchForm} color="link" block>
             Create account
           </Button>
         </CardBody>

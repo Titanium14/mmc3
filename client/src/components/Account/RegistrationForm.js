@@ -9,8 +9,10 @@ import {
   CardBody,
   FormFeedback
 } from 'reactstrap';
-import axios from 'axios';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { registerUser } from '../Utils/actions/authActions';
 
 class RegistrationForm extends Component {
   constructor(props) {
@@ -27,6 +29,12 @@ class RegistrationForm extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -41,11 +49,7 @@ class RegistrationForm extends Component {
       password2: this.state.password2
     };
 
-    axios
-      .post('/api/users/register', newUser)
-      .then(res => console.log(res.data))
-      .catch(err => this.setState({ errors: err.response.data }));
-    // .catch(err => console.log(err.response.data));
+    this.props.registerUser(newUser, this.props.history);
   }
 
   render() {
@@ -108,7 +112,7 @@ class RegistrationForm extends Component {
               </Button>
             </FormGroup>
           </Form>
-          <Button onClick={this.props.switchForm} color="link" block>
+          <Button href="#signup" onClick={this.props.switchForm} color="link" block>
             Have an account?
           </Button>
         </CardBody>
@@ -118,7 +122,18 @@ class RegistrationForm extends Component {
 }
 
 RegistrationForm.propTypes = {
-  switchForm: PropTypes.func.isRequired
+  switchForm: PropTypes.func.isRequired,
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
-export default RegistrationForm;
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { registerUser }
+)(withRouter(RegistrationForm));

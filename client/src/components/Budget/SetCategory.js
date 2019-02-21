@@ -6,7 +6,7 @@ import nextarrow from '../../assets/budget/next-arrow.png';
 
 import CategoryList from './CategoryList';
 import CreateButton from './CreateButton';
-import { objCustomOptions } from '../Utils/ObjectGenerator';
+import { objCustomOptions } from '../Utils/objectGenerator';
 
 class SetCategory extends Component {
   constructor(props) {
