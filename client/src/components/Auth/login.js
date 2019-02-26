@@ -9,19 +9,19 @@ import {
   CardBody,
   FormFeedback
 } from 'reactstrap';
+// import axios from 'axios';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { registerUser } from '../Utils/actions/authActions';
+import { loginUser } from '../../redux/actions/authActions';
 
-class RegistrationForm extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      name: '',
       email: '',
       password: '',
-      password2: '',
       errors: {}
     };
 
@@ -29,27 +29,42 @@ class RegistrationForm extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push('/Home');
     }
   }
 
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.errors) {
+      return { errors: nextProps.errors };
+    }
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.errors !== this.props.errors) {
+      this.setState({ errors: this.props.errors });
+    }
+    if (this.props.auth.isAuthenticated) {
+      this.setState({ isAuthenticated: this.props.auth.isAuthenticated });
+      this.props.history.push('/');
+    }
   }
 
   onSubmit(e) {
     e.preventDefault();
 
-    const newUser = {
-      name: this.state.name,
+    const userData = {
       email: this.state.email,
-      password: this.state.password,
-      password2: this.state.password2
+      password: this.state.password
     };
 
-    this.props.registerUser(newUser, this.props.history);
+    this.props.loginUser(userData);
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
@@ -58,21 +73,10 @@ class RegistrationForm extends Component {
     return (
       <Card>
         <CardHeader className="text-center" tag="h2">
-          Sign In
+          Log In
         </CardHeader>
         <CardBody>
-          <Form noValidate onSubmit={this.onSubmit}>
-            <FormGroup row>
-              <Input
-                type="text"
-                className={errors.name ? 'is-invalid' : ''}
-                placeholder="Name"
-                name="name"
-                value={this.state.name}
-                onChange={this.onChange}
-              />
-              <FormFeedback>{errors.name}</FormFeedback>
-            </FormGroup>
+          <Form onSubmit={this.onSubmit}>
             <FormGroup row>
               <Input
                 type="email"
@@ -96,24 +100,13 @@ class RegistrationForm extends Component {
               <FormFeedback>{errors.password}</FormFeedback>
             </FormGroup>
             <FormGroup row>
-              <Input
-                type="password"
-                className={errors.password2 ? 'is-invalid' : ''}
-                placeholder="Confirm password"
-                name="password2"
-                value={this.state.password2}
-                onChange={this.onChange}
-              />
-              <FormFeedback>{errors.password2}</FormFeedback>
-            </FormGroup>
-            <FormGroup row>
               <Button color="primary" block>
-                Submit
+                Login
               </Button>
             </FormGroup>
           </Form>
-          <Button href="#signup" onClick={this.props.switchForm} color="link" block>
-            Have an account?
+          <Button href="/Auth/register" color="link" block>
+            Create account
           </Button>
         </CardBody>
       </Card>
@@ -121,9 +114,8 @@ class RegistrationForm extends Component {
   }
 }
 
-RegistrationForm.propTypes = {
-  switchForm: PropTypes.func.isRequired,
-  registerUser: PropTypes.func.isRequired,
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -135,5 +127,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { registerUser }
-)(withRouter(RegistrationForm));
+  { loginUser }
+)(withRouter(Login));

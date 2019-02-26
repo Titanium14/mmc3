@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap';
-import '../../css/profile.css';
+
+// import './profile.css';
 
 import NavBar from '../NavBar/NavBar';
 import Footer from '../Footer/Footer';

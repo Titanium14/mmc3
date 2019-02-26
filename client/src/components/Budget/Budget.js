@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { Row, Col, Form } from 'reactstrap';
 
-import '../../styles/Budget.css';
+import './Budget.css';
 
-import StepGuide from './StepGuide';
-import SetPeriod from './SetPeriod';
-import SetCategory from './SetCategory';
-import SetMoney from './SetMoney';
-import GenerateResult from './GenerateResult';
+import CreateButton from './components/createButton';
+
+import StepGuide from './components/stepGuide';
+import SetPeriod from './components/setPeriod';
+import SetCategory from './components/setCategory';
+import SetMoney from './components/setMoney';
+import GenerateResult from './components/generateResult';
 
 const descList = [
   'Choose your budget time-frame and add your income',
@@ -24,6 +26,9 @@ class Budget extends Component {
       period: 'week',
       income: 0
     };
+
+    this.onNavBtnClick = this.onNavBtnClick.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   handleInputChange(e) {
@@ -36,16 +41,13 @@ class Budget extends Component {
     });
   }
 
-  onBackClick() {
-    this.setState({
-      stepNo: this.state.stepNo - 1
-    });
-  }
+  onNavBtnClick(e) {
+    const target = e.target;
+    const name = target.name;
 
-  onNextClick() {
-    this.setState({
-      stepNo: this.state.stepNo + 1
-    });
+    name === 'Back'
+      ? this.setState({ stepNo: this.state.stepNo - 1 })
+      : this.setState({ stepNo: this.state.stepNo + 1 });
   }
 
   onSubmit(e) {
@@ -53,6 +55,36 @@ class Budget extends Component {
   }
 
   render() {
+    const navBtns = (
+      <>
+        <Col />
+        {this.state.stepNo !== 1 ? (
+          <Col lg={1}>
+            <CreateButton
+              name="Back"
+              handleBtn={this.onNavBtnClick.bind(this)}
+            />
+          </Col>
+        ) : (
+          <></>
+        )}
+        <Col lg={4} />
+        <Col lg={1}>
+          <CreateButton name="Next" handleBtn={this.onNavBtnClick.bind(this)} />
+        </Col>
+        <Col />
+      </>
+    );
+
+    const submitBtn = (
+      <>
+        <Col lg={2}>
+          <CreateButton name="Submit" handleBtn={this.onSubmit.bind(this)} />
+        </Col>
+        <Col />
+      </>
+    );
+
     return (
       <>
         <Row noGutters>
@@ -79,7 +111,7 @@ class Budget extends Component {
         <Row noGutters>
           <Col />
           {this.state.stepNo < 4 ? (
-            <Col lg={6}>
+            <Col lg={this.state.stepNo < 3 ? 6 : 8}>
               <Form
                 onSubmit={this.props.handleSubmit}
                 className="m-element-spacing">
@@ -88,18 +120,11 @@ class Budget extends Component {
                     period={this.state.period}
                     income={this.state.income}
                     handleInput={this.handleInputChange.bind(this)}
-                    handleNext={this.onNextClick.bind(this)}
                   />
                 ) : this.state.stepNo === 2 ? (
-                  <SetCategory
-                    handleNext={this.onNextClick.bind(this)}
-                    handleBack={this.onBackClick.bind(this)}
-                  />
+                  <SetCategory />
                 ) : (
-                  <SetMoney
-                    handleNext={this.onNextClick.bind(this)}
-                    handleBack={this.onBackClick.bind(this)}
-                  />
+                  <SetMoney />
                 )}
               </Form>
             </Col>
@@ -109,6 +134,9 @@ class Budget extends Component {
             </Col>
           )}
           <Col />
+        </Row>
+        <Row className="m-element-spacing">
+          {this.state.stepNo < 4 ? navBtns : submitBtn}
         </Row>
       </>
     );

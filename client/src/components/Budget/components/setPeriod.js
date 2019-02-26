@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import { Row, Col, FormGroup, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-import calendar from '../../assets/budget/calendar.png';
-import sackmoney from '../../assets/budget/sack-money.png';
-import nextarrow from '../../assets/budget/next-arrow.png';
-
-import CreateButton from './CreateButton';
+import calendar from './assets/calendar.png';
+import sackmoney from './assets/sack-money.png';
 
 class SetPeriod extends Component {
   render() {
@@ -71,16 +68,6 @@ class SetPeriod extends Component {
             <Col />
           </Row>
         </FormGroup>
-        <Row className="m-element-spacing">
-          <Col lg={10} />
-          <Col lg={2}>
-            <CreateButton
-              name="Next"
-              img={nextarrow}
-              handleBtn={this.props.handleNext}
-            />
-          </Col>
-        </Row>
       </>
     );
   }
@@ -89,8 +76,7 @@ class SetPeriod extends Component {
 SetPeriod.propTypes = {
   period: PropTypes.string.isRequired,
   income: PropTypes.number.isRequired,
-  handleInput: PropTypes.func.isRequired,
-  handleNext: PropTypes.func.isRequired
+  handleInput: PropTypes.func.isRequired
 };
 
 export default SetPeriod;

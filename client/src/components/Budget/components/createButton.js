@@ -2,14 +2,20 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-const CategoryList = props => {
+import arrow from './assets/next-arrow.png';
+
+const CreateButton = props => {
   return (
-    <Button onClick={props.handleBtn} className="s-btn-color" color="primary">
+    <Button
+      name={props.name}
+      onClick={props.handleBtn}
+      className="s-btn-color s-remove-event"
+      color="primary">
       {props.name === 'Back' ? (
         <h4 className="s-weight">
           <img
             className="m-responsive-img s-img-color s-rotate-arrow"
-            src={props.img}
+            src={arrow}
             alt={'back-arrow'}
           />
           {props.name}
@@ -19,7 +25,7 @@ const CategoryList = props => {
           {props.name}
           <img
             className="m-responsive-img s-img-color"
-            src={props.img}
+            src={arrow}
             alt={'next-arrow'}
           />
         </h4>
@@ -30,10 +36,9 @@ const CategoryList = props => {
   );
 };
 
-CategoryList.propTypes = {
+CreateButton.propTypes = {
   name: PropTypes.string.isRequired,
-  img: PropTypes.string,
-  handleBtn: PropTypes.func
+  handleBtn: PropTypes.func.isRequired
 };
 
-export default CategoryList;
+export default CreateButton;

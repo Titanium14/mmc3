@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Container, Row, Col } from 'reactstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './styles/index.css';
+import './index.css';
 
 import App from './components/App/App';
 

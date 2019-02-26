@@ -1,12 +1,12 @@
 import React from 'react';
 import { Row, Col, CardGroup } from 'reactstrap';
 
-import '../../styles/Home.css';
+import './Home.css';
 
-import Welcome from './Welcome';
-import SectionHeader from './SectionHeader';
-import Basics from './Basics';
-import FeatureCard from './FeatureCard';
+import Welcome from './components/welcome';
+import SectionHeader from './components/sectionHeader';
+import Basics from './components/basics';
+import FeatureCard from './components/featureCard';
 
 const Home = () => {
   return (

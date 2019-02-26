@@ -26,3 +26,11 @@
 .s-rotate-arrow {
   transform: rotate(180deg);
 }
+
+.s-remove-event h4 {
+  pointer-events: none;
+}
+
+.s-coin-sizing {
+  position: absolute;
+}

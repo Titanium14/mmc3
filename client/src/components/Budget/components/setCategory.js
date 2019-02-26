@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import { Row, Col, FormGroup, Card, CardHeader, ListGroup } from 'reactstrap';
-import PropTypes from 'prop-types';
 
-import nextarrow from '../../assets/budget/next-arrow.png';
-
-import CategoryList from './CategoryList';
-import CreateButton from './CreateButton';
-import { objCustomOptions } from '../Utils/objectGenerator';
+import CategoryList from './categoryList';
+import { objCustomOptions } from '../utils/objectCreator';
 
 class SetCategory extends Component {
   constructor(props) {
@@ -57,44 +53,22 @@ class SetCategory extends Component {
             <Col />
             <Col lg={5}>
               <Card>
-                <CardHeader>Needs</CardHeader>
+                <CardHeader tag="h2">Needs</CardHeader>
                 <ListGroup>{needsList}</ListGroup>
               </Card>
             </Col>
             <Col lg={5}>
               <Card>
-                <CardHeader>Wants</CardHeader>
+                <CardHeader tag="h2">Wants</CardHeader>
                 <ListGroup>{wantsList}</ListGroup>
               </Card>
             </Col>
             <Col />
           </Row>
         </FormGroup>
-        <Row className="m-element-spacing">
-          <Col lg={2}>
-            <CreateButton
-              name="Back"
-              img={nextarrow}
-              handleBtn={this.props.handleBack}
-            />
-          </Col>
-          <Col lg={8} />
-          <Col lg={2}>
-            <CreateButton
-              name="Next"
-              img={nextarrow}
-              handleBtn={this.props.handleNext}
-            />
-          </Col>
-        </Row>
       </>
     );
   }
 }
-
-SetCategory.propTypes = {
-  handleNext: PropTypes.func.isRequired,
-  handleBack: PropTypes.func.isRequired
-};
 
 export default SetCategory;
