@@ -24,7 +24,9 @@ class Budget extends Component {
     this.state = {
       stepNo: 1,
       period: 'week',
-      income: 0
+      income: 0,
+      chosenNeedsCate: [],
+      chosenWantsCate: []
     };
 
     this.onNavBtnClick = this.onNavBtnClick.bind(this);
@@ -48,6 +50,26 @@ class Budget extends Component {
     name === 'Back'
       ? this.setState({ stepNo: this.state.stepNo - 1 })
       : this.setState({ stepNo: this.state.stepNo + 1 });
+  }
+
+  onCateClicked(category, list) {
+    let tempCateArray;
+    list === 'Needs'
+      ? (tempCateArray = this.state.chosenNeedsCate)
+      : (tempCateArray = this.state.chosenWantsCate);
+    let tempIndex = 0;
+
+    tempCateArray.forEach((cateElement, i) => {
+      if (cateElement === category) tempIndex = i;
+    });
+
+    !tempCateArray.includes(category)
+      ? tempCateArray.push(category)
+      : tempCateArray.splice(tempIndex, 1);
+
+    list === 'Needs'
+      ? this.setState({ chosenNeedsCate: tempCateArray })
+      : this.setState({ chosenWantsCate: tempCateArray });
   }
 
   onSubmit(e) {
@@ -78,6 +100,7 @@ class Budget extends Component {
 
     const submitBtn = (
       <>
+        <Col />
         <Col lg={2}>
           <CreateButton name="Submit" handleBtn={this.onSubmit.bind(this)} />
         </Col>
@@ -87,9 +110,9 @@ class Budget extends Component {
 
     return (
       <>
-        <Row noGutters>
-          <Col />
-          {this.state.stepNo < 4 ? (
+        {this.state.stepNo < 4 ? (
+          <Row noGutters>
+            <Col />
             <Col lg={10}>
               <StepGuide
                 name="Steps"
@@ -97,17 +120,11 @@ class Budget extends Component {
                 stepDesc={descList[this.state.stepNo - 1]}
               />
             </Col>
-          ) : (
-            <Col lg={12}>
-              <StepGuide
-                name="Results"
-                headerCard1="Your Budget"
-                headerCard2="Awards"
-              />
-            </Col>
-          )}
-          <Col />
-        </Row>
+            <Col />
+          </Row>
+        ) : (
+          <></>
+        )}
         <Row noGutters>
           <Col />
           {this.state.stepNo < 4 ? (
@@ -122,7 +139,9 @@ class Budget extends Component {
                     handleInput={this.handleInputChange.bind(this)}
                   />
                 ) : this.state.stepNo === 2 ? (
-                  <SetCategory />
+                  <SetCategory
+                    handleCateClicked={this.onCateClicked.bind(this)}
+                  />
                 ) : (
                   <SetMoney />
                 )}

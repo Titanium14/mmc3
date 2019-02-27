@@ -27,7 +27,7 @@
   transform: rotate(180deg);
 }
 
-.s-remove-event h4 {
+.s-remove-event h4, .s-remove-event-cate {
   pointer-events: none;
 }
 

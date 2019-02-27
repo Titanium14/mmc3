@@ -3,7 +3,7 @@ import { Row, Col, FormGroup, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import calendar from './assets/calendar.png';
-import sackmoney from './assets/sack-money.png';
+import incomeBag from './assets/income.png';
 
 class SetPeriod extends Component {
   render() {
@@ -61,8 +61,8 @@ class SetPeriod extends Component {
             <Col lg={2}>
               <img
                 className="m-responsive-img s-img-positioning"
-                src={sackmoney}
-                alt={'sack-money'}
+                src={incomeBag}
+                alt={'income-bag'}
               />
             </Col>
             <Col />

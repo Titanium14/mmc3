@@ -63,6 +63,14 @@ h6 {
   margin-top: 30px;
 }
 
+.m-element-spacing-bottom {
+  margin-bottom: 20px;
+}
+
+.m-element-spacing-right {
+  margin-right: 20px;
+}
+
 .m-main-color {
   color: #7b69eb;
   font-weight: 700;

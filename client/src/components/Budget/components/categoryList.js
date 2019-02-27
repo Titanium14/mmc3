@@ -7,24 +7,40 @@ class CategoryList extends Component {
     super(props);
 
     this.state = {
-      activeState: false
+      btnColor: '',
+      colorState: false
     };
 
-    this.onClickActive = this.onClickActive.bind(this);
+    this.handleCateState = this.handleCateState.bind(this);
   }
 
-  onClickActive(e) {
+  handleCateState(e) {
     e.preventDefault();
-    
-    this.setState(prevState => ({
-      activeState: !prevState.activeState
-    }));
+
+    if (!this.state.colorState) {
+      this.props.listName === 'Needs'
+        ? this.setState({ btnColor: 'success', colorState: true })
+        : this.setState({ btnColor: 'info', colorState: true });
+    } else {
+      this.setState({ btnColor: '', colorState: false });
+    }
+    this.props.handleCateClicked(this.props.item, this.props.listName);
   }
 
   render() {
     return (
       <>
-        <ListGroupItem tag="button" onClick={this.onClickActive} active={this.state.activeState} action>
+        <ListGroupItem
+          name={this.props.listName}
+          tag="button"
+          onClick={this.handleCateState}
+          color={this.state.btnColor}
+          action>
+          <img
+            className="m-element-spacing-right s-remove-event-cate"
+            src={this.props.icon}
+            alt={this.props.item}
+          />
           {this.props.item}
         </ListGroupItem>
       </>
@@ -33,7 +49,10 @@ class CategoryList extends Component {
 }
 
 CategoryList.propTypes = {
-  item: PropTypes.string.isRequired
+  listName: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  item: PropTypes.string.isRequired,
+  handleCateClicked: PropTypes.func.isRequired
 };
 
 export default CategoryList;

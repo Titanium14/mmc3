@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-import arrow from './assets/next-arrow.png';
+import arrow from './assets/arrow.png';
 
 const CreateButton = props => {
   return (
