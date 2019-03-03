@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Col, Card, CardBody } from 'reactstrap';
 
-class GenerateSingle extends Component {
+class BudgetCard extends Component {
   render() {
     return (
       <>
@@ -27,4 +27,4 @@ class GenerateSingle extends Component {
   }
 }
 
-export default GenerateSingle;
+export default BudgetCard;

@@ -1,16 +1,23 @@
 import React, { Component } from 'react';
 import { Row, Col, Card, CardBody } from 'reactstrap';
 
-import ribbon from './assets/ribbon.png';
+import { ribbonIcon } from './utils/exportImages';
 
-import GenerateSingle from './generateSingle';
+import BudgetCard from './components/budgetCard';
 
-class GenerateResult extends Component {
+class Results extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+    };
+  }
+
   render() {
     let ribbonArray = [];
     for (let i = 0; i < 16; i++) {
       ribbonArray.push(
-        <img style={{ width: '12.5%' }} key={i} src={ribbon} alt="..." />
+        <img style={{ width: '12.5%' }} key={i} src={ribbonIcon} alt="..." />
       );
     }
 
@@ -32,14 +39,14 @@ class GenerateResult extends Component {
                   </Col>
                   <Col lg={7}>
                     <Row>
-                      <GenerateSingle />
-                      <GenerateSingle />
-                      <GenerateSingle />
-                      <GenerateSingle />
-                      <GenerateSingle />
-                      <GenerateSingle />
-                      <GenerateSingle />
-                      <GenerateSingle />
+                      <BudgetCard />
+                      <BudgetCard />
+                      <BudgetCard />
+                      <BudgetCard />
+                      <BudgetCard />
+                      <BudgetCard />
+                      <BudgetCard />
+                      <BudgetCard />
                     </Row>
                   </Col>
                 </Row>
@@ -63,4 +70,4 @@ class GenerateResult extends Component {
   }
 }
 
-export default GenerateResult;
+export default Results;

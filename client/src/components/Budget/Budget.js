@@ -3,13 +3,13 @@ import { Row, Col, Form } from 'reactstrap';
 
 import './Budget.css';
 
-import CreateButton from './components/createButton';
-
 import StepGuide from './components/stepGuide';
 import SetPeriod from './components/setPeriod';
 import SetCategory from './components/setCategory';
 import SetMoney from './components/setMoney';
-import GenerateResult from './components/generateResult';
+
+import { objCateList } from './utils/objectCreator';
+import { generateNavBtns } from './utils/methods';
 
 const descList = [
   'Choose your budget time-frame and add your income',
@@ -25,8 +25,16 @@ class Budget extends Component {
       stepNo: 1,
       period: 'week',
       income: 0,
+      inputIncome: 0,
+      tempNeedsArray: [],
+      tempWantsArray: [],
       chosenNeedsCate: [],
-      chosenWantsCate: []
+      chosenWantsCate: [],
+      singleNeedsArray: [],
+      singleWantsArray: [],
+      iconsNeedsArray: [],
+      iconsWantsArray: [],
+      cateBudget: []
     };
 
     this.onNavBtnClick = this.onNavBtnClick.bind(this);
@@ -35,12 +43,10 @@ class Budget extends Component {
 
   handleInputChange(e) {
     const target = e.target;
-    const value = target.value;
     const name = target.name;
+    const value = name === 'income' ? parseInt(target.value) : target.value;
 
-    this.setState({
-      [name]: value
-    });
+    this.setState({ [name]: value });
   }
 
   onNavBtnClick(e) {
@@ -52,62 +58,60 @@ class Budget extends Component {
       : this.setState({ stepNo: this.state.stepNo + 1 });
   }
 
-  onCateClicked(category, list) {
-    let tempCateArray;
-    list === 'Needs'
-      ? (tempCateArray = this.state.chosenNeedsCate)
-      : (tempCateArray = this.state.chosenWantsCate);
-    let tempIndex = 0;
+  onCateClicked(category, list, icon, enveIcon) {
+    let tempCateArray, tempSingleIcon, tempIconArray;
+    if (list === 'needs') {
+      tempCateArray = this.state.tempNeedsArray;
+      tempSingleIcon = this.state.singleNeedsArray;
+      tempIconArray = this.state.iconsNeedsArray;
+    } else {
+      tempCateArray = this.state.tempWantsArray;
+      tempSingleIcon = this.state.singleWantsArray;
+      tempIconArray = this.state.iconsWantsArray;
+    }
 
+    let tempIndex = 0;
     tempCateArray.forEach((cateElement, i) => {
       if (cateElement === category) tempIndex = i;
     });
 
-    !tempCateArray.includes(category)
-      ? tempCateArray.push(category)
-      : tempCateArray.splice(tempIndex, 1);
+    if (!tempCateArray.includes(category)) {
+      tempCateArray.push(category);
+      tempSingleIcon.push(icon);
+      tempIconArray.push(enveIcon);
+    } else {
+      tempCateArray.splice(tempIndex, 1);
+      tempSingleIcon.splice(tempIndex, 1);
+      tempIconArray.splice(tempIndex, 1);
+    }
 
-    list === 'Needs'
-      ? this.setState({ chosenNeedsCate: tempCateArray })
-      : this.setState({ chosenWantsCate: tempCateArray });
+    const objTemp = objCateList(tempCateArray, tempSingleIcon, tempIconArray);
+
+    list === 'needs'
+      ? this.setState({
+        tempNeedsArray: tempCateArray,
+        singleNeedArray: tempSingleIcon,
+        iconNeedsArray: tempIconArray,
+        chosenNeedsCate: objTemp
+      })
+      : this.setState({
+        tempWantsArray: tempCateArray,
+        singleWantArray: tempSingleIcon,
+        iconWantsArray: tempIconArray,
+        chosenWantsCate: objTemp
+      });
   }
 
-  onSubmit(e) {
-    e.preventDefault();
+  onSubmit() {
+    
   }
 
   render() {
-    const navBtns = (
-      <>
-        <Col />
-        {this.state.stepNo !== 1 ? (
-          <Col lg={1}>
-            <CreateButton
-              name="Back"
-              handleBtn={this.onNavBtnClick.bind(this)}
-            />
-          </Col>
-        ) : (
-          <></>
-        )}
-        <Col lg={4} />
-        <Col lg={1}>
-          <CreateButton name="Next" handleBtn={this.onNavBtnClick.bind(this)} />
-        </Col>
-        <Col />
-      </>
+    const navBtns = generateNavBtns(
+      this.state.stepNo,
+      this.onNavBtnClick,
+      this.onSubmit
     );
-
-    const submitBtn = (
-      <>
-        <Col />
-        <Col lg={2}>
-          <CreateButton name="Submit" handleBtn={this.onSubmit.bind(this)} />
-        </Col>
-        <Col />
-      </>
-    );
-
     return (
       <>
         {this.state.stepNo < 4 ? (
@@ -127,35 +131,38 @@ class Budget extends Component {
         )}
         <Row noGutters>
           <Col />
-          {this.state.stepNo < 4 ? (
-            <Col lg={this.state.stepNo < 3 ? 6 : 8}>
-              <Form
-                onSubmit={this.props.handleSubmit}
-                className="m-element-spacing">
-                {this.state.stepNo === 1 ? (
-                  <SetPeriod
-                    period={this.state.period}
-                    income={this.state.income}
-                    handleInput={this.handleInputChange.bind(this)}
-                  />
-                ) : this.state.stepNo === 2 ? (
-                  <SetCategory
-                    handleCateClicked={this.onCateClicked.bind(this)}
-                  />
-                ) : (
-                  <SetMoney />
-                )}
-              </Form>
-            </Col>
-          ) : (
-            <Col lg={12}>
-              <GenerateResult />
-            </Col>
-          )}
+          <Col lg={this.state.stepNo < 3 ? 6 : 8}>
+            <Form
+              onSubmit={this.props.handleSubmit}
+              className="m-element-spacing">
+              {this.state.stepNo === 1 ? (
+                <SetPeriod
+                  period={this.state.period}
+                  income={this.state.income}
+                  handleInput={this.handleInputChange.bind(this)}
+                />
+              ) : this.state.stepNo === 2 ? (
+                <SetCategory
+                  handleCateClicked={this.onCateClicked.bind(this)}
+                />
+              ) : (
+                <SetMoney
+                  arrayNeeds={this.state.chosenNeedsCate}
+                  arrayWants={this.state.chosenWantsCate}
+                  income={this.state.income}
+                  inputIncome={this.state.inputIncome}
+                  handleInput={this.onSubmit}
+                  handleIncome={this.handleInputChange.bind(this)}
+                />
+              )}
+            </Form>
+          </Col>
           <Col />
         </Row>
         <Row className="m-element-spacing">
-          {this.state.stepNo < 4 ? navBtns : submitBtn}
+          <Col />
+          {navBtns}
+          <Col />
         </Row>
       </>
     );

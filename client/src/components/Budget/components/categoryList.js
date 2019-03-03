@@ -24,26 +24,29 @@ class CategoryList extends Component {
     } else {
       this.setState({ btnColor: '', colorState: false });
     }
-    this.props.handleCateClicked(this.props.item, this.props.listName);
+    this.props.handleCateClicked(
+      this.props.item,
+      this.props.listName,
+      this.props.icon,
+      this.props.enveIcon
+    );
   }
 
   render() {
     return (
-      <>
-        <ListGroupItem
-          name={this.props.listName}
-          tag="button"
-          onClick={this.handleCateState}
-          color={this.state.btnColor}
-          action>
-          <img
-            className="m-element-spacing-right s-remove-event-cate"
-            src={this.props.icon}
-            alt={this.props.item}
-          />
-          {this.props.item}
-        </ListGroupItem>
-      </>
+      <ListGroupItem
+        name={this.props.listName}
+        tag="button"
+        onClick={this.handleCateState}
+        color={this.state.btnColor}
+        action>
+        <img
+          className="m-element-spacing-right s-remove-event-cate s-sizing"
+          src={this.props.icon}
+          alt={this.props.item}
+        />
+        {this.props.item}
+      </ListGroupItem>
     );
   }
 }

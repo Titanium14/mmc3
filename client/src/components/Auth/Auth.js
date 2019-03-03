@@ -3,8 +3,8 @@ import { Row, Col } from 'reactstrap';
 
 // import './Auth.css';
 
-import Login from './login';
-import Register from './register';
+import Login from './components/login';
+import Register from './components/register';
 
 const Auth = props => {
   return (

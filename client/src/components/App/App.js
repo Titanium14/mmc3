@@ -4,19 +4,23 @@ import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../../redux/utils/setAuthToken';
 import { setCurrentUser, logoutUser } from '../../redux/actions/authActions';
+import { clearCurrentProfile } from '../../redux/actions/profileActions';
 
 import './App.css';
 
 import Home from '../Home/Home';
 import Budget from '../Budget/Budget';
-// import Profile from '../Profile/Profile';
+import Results from '../Results/Results';
+import Profile from '../Profile/Profile';
 import Auth from '../Auth/Auth';
 
 import NavBar from './components/NavBar';
-import LoadingSpinner from './components/LoadingSpinner';
+import LoadingSpinner from '../utils/LoadingSpinner';
 import Footer from './components/Footer';
 
 import store from '../../redux/store';
+
+import PrivateRoute from '../utils/PrivateRoute';
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -33,6 +37,7 @@ if (localStorage.jwtToken) {
     // Logout user
     store.dispatch(logoutUser());
     // Clear current profile
+    store.dispatch(clearCurrentProfile());
     // Redirect to login
     window.location.href = '/login';
   }
@@ -48,7 +53,8 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route exact path="/Budget" component={Budget} />
-              {/* <Route exact path='/Profile' component={Profile} /> */}
+              <Route exact path="/Results" component={Results} />
+              <PrivateRoute exact path="/Profile" component={Profile} />
               <Route exact path="/Auth/login" component={Auth} />
               <Route exact path="/Auth/register" component={Auth} />
               <Route render={() => <LoadingSpinner />} />

@@ -1,100 +1,142 @@
 import React, { Component } from 'react';
-import { Row, Col, FormGroup, Input } from 'reactstrap';
-
-import coin from './assets/coin.png';
-import envelope from './assets/envelope.png';
+import { Row, Col, FormGroup, Input, Card, CardBody } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 import CreateButton from './createButton';
+import { coinIcon } from '../utils/exportImages';
+import {
+  generateCoins,
+  generatePositions,
+  generateIconsEnves
+} from '../utils/methods';
 
 class SetMoney extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      coinStack: 20
+      coinStack: 20,
+      xArray: [],
+      yArray: [],
+      stepProg: 0,
+      coinValue: 0,
+      initialIncome: this.props.income,
+      remainingIncome: this.props.income,
+      inputArray: []
     };
 
     this.onAddClick = this.onAddClick.bind(this);
   }
 
-  onAddClick(e) {
-    e.preventDefault();
+  componentDidMount() {
+    const [tempXArray, tempYArray] = generatePositions(this.state.coinStack);
+
+    this.setState({
+      xArray: tempXArray,
+      yArray: tempYArray,
+      coinValue: this.state.initialIncome / this.state.coinStack
+    });
+  }
+
+  onAddClick() {
+    const input = parseInt(this.props.inputIncome);
+    let tempIncomeArray = this.state.inputArray;
+    tempIncomeArray.push(input);
+    console.log(tempIncomeArray);
+
+    this.setState(
+      {
+        stepProg: this.state.stepProg + 1,
+        remainingIncome: this.state.remainingIncome - this.props.inputIncome
+      },
+      () => {
+        this.setState({
+          coinStack: this.state.remainingIncome / this.state.coinValue,
+          inputArray: tempIncomeArray
+        });
+      }
+    );
   }
 
   render() {
-    let coinArray = [];
-    let envelopeArray = [];
-    let xPos = 0;
-    let yPos = 0;
+    const icons = generateIconsEnves(
+      'Icon',
+      this.props.arrayNeeds,
+      this.props.arrayWants,
+      null
+    );
+    const envelopes = generateIconsEnves(
+      'Envelopes',
+      this.props.arrayNeeds,
+      this.props.arrayWants,
+      this.state.inputArray
+    );
 
-    for (let i = 0; i < this.state.coinStack; i++) {
-      coinArray.unshift(
-        <img
-          style={{ top: yPos, left: xPos }}
-          className="m-responsive-img s-coin-sizing"
-          key={i}
-          src={coin}
-          alt="Stacking coins"
-        />
-      );
-      yPos += 20;
-      xPos = Math.floor(Math.random() * 21) - 10;
-    }
-
-    for (let i = 0; i < 9; i++) {
-      envelopeArray.push(
-        <img style={{ width: '33.3%' }} key={i} src={envelope} alt="..." />
-      );
-    }
+    const [coins, yPos = 0] = generateCoins(
+      this.state.coinStack,
+      coinIcon,
+      this.state.xArray,
+      this.state.yArray,
+    );
 
     return (
-      <>
-        <FormGroup>
-          <Row style={{ wordBreak: 'break-all' }}>
-            <Col lg={2}>
-              <div style={{ position: 'relative', height: yPos + 100 }}>
-                {coinArray}
-              </div>
-              <h2 className="m-main-color text-center">Remaining</h2>
-              <Input
-                type="text"
-                name="income"
-                id="textIncome"
-                placeholder="in Euro (€)"
-              />
-            </Col>
-            <Col lg={2}>
-              <img
-                className="m-img-center"
-                src="https://placeholdit.imgix.net/~text?txtsize=16&txt=image&w=100&h=100"
-                alt="..."
-              />
-              <Input
-                type="text"
-                name="income"
-                id="textIncome"
-                placeholder="in Euro (€)"
-              />
-              <div className="text-center m-element-spacing-top">
-                <CreateButton
-                  className=""
-                  name="Add"
-                  handleBtn={this.onAddClick.bind(this)}
-                />
-              </div>
-            </Col>
-            <Col lg={8}>
-              <Row>
-                <Col />
-                <Col lg={9}>{envelopeArray}</Col>
-                <Col />
-              </Row>
-            </Col>
-          </Row>
-        </FormGroup>
-      </>
+      <FormGroup>
+        <Row>
+          <Col />
+          <Col lg={2}>
+            <div className="s-position-type" style={{ height: yPos + 120 }}>
+              {coins}
+            </div>
+            <h2 className="m-main-color text-center">Remaining</h2>
+            <Card>
+              <CardBody className="text-center">
+                {this.state.remainingIncome}
+              </CardBody>
+            </Card>
+          </Col>
+          <Col lg={2} className="align-self-center">
+            <img
+              className="m-img-center m-element-spacing-bottom s-img-border"
+              src={icons[this.state.stepProg]}
+              alt="..."
+            />
+            <Input
+              style={{width: '75%'}}
+              className="m-img-center m-element-spacing-bottom"
+              type="text"
+              name="inputIncome"
+              id="textIncome"
+              placeholder="in Euro (€)"
+              onChange={this.props.handleIncome}
+            />
+            <div className="text-center">
+              <CreateButton name="Add" handleBtn={this.onAddClick} />
+            </div>
+          </Col>
+          <Col lg={6}>
+            <Row>
+              <Col />
+              <Col lg={12}>
+                <Row className="justify-content-start">
+                  {envelopes}
+                </Row>
+              </Col>
+              <Col />
+            </Row>
+          </Col>
+          <Col />
+        </Row>
+      </FormGroup>
     );
   }
 }
+
+SetMoney.propTypes = {
+  arrayNeeds: PropTypes.array.isRequired,
+  arrayWants: PropTypes.array.isRequired,
+  income: PropTypes.number.isRequired,
+  handleInput: PropTypes.func.isRequired,
+  handleIncome: PropTypes.func.isRequired
+};
 
 export default SetMoney;

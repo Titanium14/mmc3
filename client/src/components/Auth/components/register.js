@@ -3,16 +3,16 @@ import {
   Button,
   Form,
   FormGroup,
-  Input,
   Card,
   CardHeader,
-  CardBody,
-  FormFeedback
+  CardBody
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { registerUser } from '../../redux/actions/authActions';
+import { registerUser } from '../../../redux/actions/authActions';
+
+import TextFieldGroup from './textFieldGroup';
 
 class Register extends Component {
   constructor(props) {
@@ -80,50 +80,38 @@ class Register extends Component {
         </CardHeader>
         <CardBody>
           <Form noValidate onSubmit={this.onSubmit}>
-            <FormGroup row>
-              <Input
-                type="text"
-                className={errors.name ? 'is-invalid' : ''}
-                placeholder="Name"
-                name="name"
-                value={this.state.name}
-                onChange={this.onChange}
-              />
-              <FormFeedback>{errors.name}</FormFeedback>
-            </FormGroup>
-            <FormGroup row>
-              <Input
-                type="email"
-                className={errors.email ? 'is-invalid' : ''}
-                placeholder="Email Address"
-                name="email"
-                value={this.state.email}
-                onChange={this.onChange}
-              />
-              <FormFeedback>{errors.email}</FormFeedback>
-            </FormGroup>
-            <FormGroup row>
-              <Input
-                type="password"
-                className={errors.password ? 'is-invalid' : ''}
-                placeholder="Password"
-                name="password"
-                value={this.state.password}
-                onChange={this.onChange}
-              />
-              <FormFeedback>{errors.password}</FormFeedback>
-            </FormGroup>
-            <FormGroup row>
-              <Input
-                type="password"
-                className={errors.password2 ? 'is-invalid' : ''}
-                placeholder="Confirm password"
-                name="password2"
-                value={this.state.password2}
-                onChange={this.onChange}
-              />
-              <FormFeedback>{errors.password2}</FormFeedback>
-            </FormGroup>
+            <TextFieldGroup
+              placeholder="Name"
+              name="name"
+              value={this.state.name}
+              onChange={this.onChange}
+              error={errors.name}
+            />
+            <TextFieldGroup
+              placeholder="Email Address"
+              name="email"
+              type="email"
+              value={this.state.email}
+              onChange={this.onChange}
+              error={errors.email}
+              info="This site uses Gravatar so if you want a profile image, use a Gravatar email"
+            />
+            <TextFieldGroup
+              placeholder="Password"
+              name="password"
+              type="password"
+              value={this.state.password}
+              onChange={this.onChange}
+              error={errors.password}
+            />
+            <TextFieldGroup
+              placeholder="Confirm password"
+              name="password2"
+              type="password"
+              value={this.state.password2}
+              onChange={this.onChange}
+              error={errors.password2}
+            />
             <FormGroup row>
               <Button color="primary" block>
                 Sign Up

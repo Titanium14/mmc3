@@ -9,7 +9,7 @@ const Welcome = props => {
         {props.subtitle}
       </h3>
       <img
-        className="m-responsive-img m-img-center"
+        className="m-responsive-img m-img-center m-element-spacing-top m-element-spacing-bottom"
         src={props.imgSrc}
         alt="..."
       />

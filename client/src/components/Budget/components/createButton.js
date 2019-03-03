@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-import arrow from './assets/arrow.png';
+import { arrowIcon } from '../utils/exportImages';
 
 const CreateButton = props => {
   return (
@@ -15,7 +15,7 @@ const CreateButton = props => {
         <h4 className="s-weight">
           <img
             className="m-responsive-img s-img-color s-rotate-arrow"
-            src={arrow}
+            src={arrowIcon}
             alt={'back-arrow'}
           />
           {props.name}
@@ -25,7 +25,7 @@ const CreateButton = props => {
           {props.name}
           <img
             className="m-responsive-img s-img-color"
-            src={arrow}
+            src={arrowIcon}
             alt={'next-arrow'}
           />
         </h4>

@@ -3,17 +3,16 @@ import {
   Button,
   Form,
   FormGroup,
-  Input,
   Card,
   CardHeader,
-  CardBody,
-  FormFeedback
+  CardBody
 } from 'reactstrap';
-// import axios from 'axios';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loginUser } from '../../redux/actions/authActions';
+import { loginUser } from '../../../redux/actions/authActions';
+
+import TextFieldGroup from './textFieldGroup';
 
 class Login extends Component {
   constructor(props) {
@@ -77,28 +76,22 @@ class Login extends Component {
         </CardHeader>
         <CardBody>
           <Form onSubmit={this.onSubmit}>
-            <FormGroup row>
-              <Input
-                type="email"
-                className={errors.email ? 'is-invalid' : ''}
-                placeholder="Email Address"
-                name="email"
-                value={this.state.email}
-                onChange={this.onChange}
-              />
-              <FormFeedback>{errors.email}</FormFeedback>
-            </FormGroup>
-            <FormGroup row>
-              <Input
-                type="password"
-                className={errors.password ? 'is-invalid' : ''}
-                placeholder="Password"
-                name="password"
-                value={this.state.password}
-                onChange={this.onChange}
-              />
-              <FormFeedback>{errors.password}</FormFeedback>
-            </FormGroup>
+            <TextFieldGroup
+              placeholder="Email Address"
+              name="email"
+              type="email"
+              value={this.state.email}
+              onChange={this.onChange}
+              error={errors.email}
+            />
+            <TextFieldGroup
+              placeholder="Password"
+              name="password"
+              type="password"
+              value={this.state.password}
+              onChange={this.onChange}
+              error={errors.password}
+            />
             <FormGroup row>
               <Button color="primary" block>
                 Login

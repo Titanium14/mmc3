@@ -1,50 +1,71 @@
-import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Row, Col } from 'reactstrap';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { getCurrentProfile } from '../../redux/actions/profileActions';
 
 // import './profile.css';
 
-import NavBar from '../NavBar/NavBar';
-import Footer from '../Footer/Footer';
-import ProfilePic from './ProfilePic';
-import ProfileDetails from './ProfileDetails';
-import ProfileButtons from './ProfileButtons';
-import SubNav from './SubNav';
+// import ProfilePic from './components/ProfilePic';
+// import ProfileDetails from './components/ProfileDetails';
+// import ProfileButtons from './components/ProfileButtons';
+// import SubNav from './components/SubNav';
+import LoadingSpinner from '../utils/LoadingSpinner';
 
-const Profile = props => {
-  return (
-    <Container fluid className="m-grid-container">
-      <Row>
-        <Col md="12">
-          <NavBar />
-        </Col>
-      </Row>
-      <Row>
-        <Col md="2" />
-        <Col md="2">
-          <ProfilePic />
-        </Col>
-        <Col md="4">
-          <ProfileDetails />
-        </Col>
-        <Col md="2">
-          <ProfileButtons />
-        </Col>
-        <Col md="2" />
-      </Row>
-      <Row>
-        <Col md="2" />
-        <Col md="8">
-          <SubNav />
-        </Col>
-        <Col md="2" />
-      </Row>
-      <Row>
-        <Col md="12">
-          <Footer />
-        </Col>
-      </Row>
-    </Container>
-  );
+class Profile extends Component {
+  componentDidMount() {
+    this.props.getCurrentProfile();
+  }
+  render() {
+    const { user } = this.props.auth;
+    const { profile, loading } = this.props.profile;
+
+    let profileContent;
+
+    if (profile === null || loading) {
+      profileContent = <LoadingSpinner />;
+    } else {
+      if (Object.keys(profile).length > 0) {
+        profileContent = <h4>TODO: DISPLAY PROFILE</h4>;
+      } else {
+        // User is logged in but has no profile
+        profileContent = (
+          <>
+            <Col />
+            <Col lg={10}>
+              <p className="lead text-muted">Welcome {user.name}</p>
+              <p>You have not yet setup a profile, please add some info</p>
+              <Link to="/create-profile" className="btn btn-lg btn-info">
+                Create Profile
+              </Link>
+            </Col>
+            <Col />
+          </>
+        );
+      }
+    }
+
+    return (
+      <>
+        <Row>{profileContent}</Row>
+      </>
+    );
+  }
+}
+
+Profile.propTypes = {
+  getCurrentProfile: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired
 };
 
-export default Profile;
+const mapStateToProps = state => ({
+  profile: state.profile,
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps,
+  { getCurrentProfile }
+)(Profile);
