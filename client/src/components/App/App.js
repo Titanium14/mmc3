@@ -4,14 +4,13 @@ import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../../redux/utils/setAuthToken';
 import { setCurrentUser, logoutUser } from '../../redux/actions/authActions';
-import { clearCurrentProfile } from '../../redux/actions/profileActions';
 
 import './App.css';
 
 import Home from '../Home/Home';
 import Budget from '../Budget/Budget';
 import Results from '../Results/Results';
-import Profile from '../Profile/Profile';
+import Dashboard from '../Dashboard/Dashboard';
 import Auth from '../Auth/Auth';
 
 import NavBar from './components/NavBar';
@@ -36,10 +35,8 @@ if (localStorage.jwtToken) {
   if (decoded.exp < currentTime) {
     // Logout user
     store.dispatch(logoutUser());
-    // Clear current profile
-    store.dispatch(clearCurrentProfile());
     // Redirect to login
-    window.location.href = '/login';
+    window.location.href = '/Auth/login';
   }
 }
 
@@ -54,7 +51,7 @@ class App extends Component {
               <Route exact path="/" component={Home} />
               <Route exact path="/Budget" component={Budget} />
               <Route exact path="/Results" component={Results} />
-              <PrivateRoute exact path="/Profile" component={Profile} />
+              <PrivateRoute exact path="/Dashboard" component={Dashboard} />
               <Route exact path="/Auth/login" component={Auth} />
               <Route exact path="/Auth/register" component={Auth} />
               <Route render={() => <LoadingSpinner />} />

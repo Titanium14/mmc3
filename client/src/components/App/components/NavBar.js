@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { logoutUser } from '../../../redux/actions/authActions';
-import { clearCurrentProfile } from '../../../redux/actions/profileActions';
 
 class NavBar extends Component {
   constructor(props) {
@@ -44,8 +43,8 @@ class NavBar extends Component {
 
     const authLinks = (
       <>
-        <NavItem active={currentPage === '/Profile' ? true : false}>
-          <NavLink href="/Profile">
+        <NavItem active={currentPage === '/Dashboard' ? true : false}>
+          <NavLink href="/Dashboard">
             <img
               src={user.avatar}
               alt={user.name}
@@ -117,5 +116,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { logoutUser, clearCurrentProfile }
+  { logoutUser }
 )(withRouter(NavBar));
