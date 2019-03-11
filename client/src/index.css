@@ -75,6 +75,10 @@ h6 {
   margin-right: 20px;
 }
 
+.m-element-block-display {
+  display: block;
+}
+
 .m-main-color {
   color: #7b69eb;
   font-weight: 700;

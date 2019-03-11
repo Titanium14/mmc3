@@ -10,7 +10,8 @@ const CreateButton = props => {
       name={props.name}
       onClick={props.handleBtn}
       className="s-btn-color s-remove-event"
-      color="primary">
+      color="primary"
+      id={props.iconId ? props.iconId : ''}>
       {props.name === 'Back' ? (
         <h4 className="s-weight">
           <img
@@ -38,6 +39,7 @@ const CreateButton = props => {
 
 CreateButton.propTypes = {
   name: PropTypes.string.isRequired,
+  iconId: PropTypes.string,
   handleBtn: PropTypes.func.isRequired
 };
 

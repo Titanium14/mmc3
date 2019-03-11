@@ -7,7 +7,7 @@ const BudgetSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'users'
   },
-  name: {
+  budgetName: {
     type: String,
     required: true
   },
@@ -15,7 +15,7 @@ const BudgetSchema = new Schema({
     type: String,
     required: true
   },
-  incomeTotal: {
+  income: {
     type: Number,
     required: true
   },

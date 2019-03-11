@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { ListGroupItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 
+import { objSingleCate } from '../utils/objectCreator';
+
 class CategoryList extends Component {
   constructor(props) {
     super(props);
@@ -17,6 +19,12 @@ class CategoryList extends Component {
   handleCateState(e) {
     e.preventDefault();
 
+    const singleCate = objSingleCate(
+      this.props.item,
+      this.props.icon,
+      this.props.enveIcon
+    );
+
     if (!this.state.colorState) {
       this.props.listName === 'Needs'
         ? this.setState({ btnColor: 'success', colorState: true })
@@ -24,12 +32,8 @@ class CategoryList extends Component {
     } else {
       this.setState({ btnColor: '', colorState: false });
     }
-    this.props.handleCateClicked(
-      this.props.item,
-      this.props.listName,
-      this.props.icon,
-      this.props.enveIcon
-    );
+
+    this.props.handleCateClicked(singleCate, this.props.listName);
   }
 
   render() {

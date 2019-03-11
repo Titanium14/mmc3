@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
 import { Row, Col, Form } from 'reactstrap';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import {
+  createBudget,
+  createCategory,
+  deleteCurrentBudget
+} from '../../redux/actions/budgetActions';
 
 import './Budget.css';
 
@@ -8,7 +15,6 @@ import SetPeriod from './components/setPeriod';
 import SetCategory from './components/setCategory';
 import SetMoney from './components/setMoney';
 
-import { objCateList } from './utils/objectCreator';
 import { generateNavBtns } from './utils/methods';
 
 const descList = [
@@ -23,28 +29,49 @@ class Budget extends Component {
 
     this.state = {
       stepNo: 1,
-      period: 'week',
+
+      budgetName: '',
+      period: 'Week',
       income: 0,
+
       inputIncome: 0,
-      tempNeedsArray: [],
-      tempWantsArray: [],
+
+      errors: {},
+
       chosenNeedsCate: [],
       chosenWantsCate: [],
-      singleNeedsArray: [],
-      singleWantsArray: [],
-      iconsNeedsArray: [],
-      iconsWantsArray: [],
-      cateBudget: []
+
+      allCates: []
     };
 
     this.onNavBtnClick = this.onNavBtnClick.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.errors) {
+      return { errors: nextProps.errors };
+    }
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.errors !== this.props.errors) {
+      this.setState({ errors: this.props.errors });
+    }
+  }
+
   handleInputChange(e) {
     const target = e.target;
     const name = target.name;
-    const value = name === 'income' ? parseInt(target.value) : target.value;
+
+    let value =
+      name === 'income' || name === 'inputIncome'
+        ? parseInt(target.value)
+        : target.value;
+
+    if ((name === 'income' || name === 'inputIncome') && isNaN(value))
+      value = '';
 
     this.setState({ [name]: value });
   }
@@ -54,59 +81,72 @@ class Budget extends Component {
     const name = target.name;
 
     name === 'Back'
-      ? this.setState({ stepNo: this.state.stepNo - 1 })
-      : this.setState({ stepNo: this.state.stepNo + 1 });
+      ? this.setState({ stepNo: this.state.stepNo - 1 }, () => {
+          if (this.state.stepNo === 1) {
+            this.props.deleteCurrentBudget(this.props.budget.budget._id);
+          }
+        })
+      : this.setState({ stepNo: this.state.stepNo + 1 }, () => {
+          if (this.state.stepNo === 2) {
+            const newBudget = {
+              budgetName: this.state.budgetName,
+              period: this.state.period,
+              income: this.state.income
+            };
+
+            this.props.createBudget(newBudget);
+          }
+        });
   }
 
-  onCateClicked(category, list, icon, enveIcon) {
-    let tempCateArray, tempSingleIcon, tempIconArray;
-    if (list === 'needs') {
-      tempCateArray = this.state.tempNeedsArray;
-      tempSingleIcon = this.state.singleNeedsArray;
-      tempIconArray = this.state.iconsNeedsArray;
-    } else {
-      tempCateArray = this.state.tempWantsArray;
-      tempSingleIcon = this.state.singleWantsArray;
-      tempIconArray = this.state.iconsWantsArray;
-    }
+  onCateClicked(cateObj, list) {
+    let tempCateArray;
+
+    list === 'Needs'
+      ? (tempCateArray = this.state.chosenNeedsCate)
+      : (tempCateArray = this.state.chosenWantsCate);
 
     let tempIndex = 0;
+    let existFlag = false;
+
     tempCateArray.forEach((cateElement, i) => {
-      if (cateElement === category) tempIndex = i;
+      if (cateElement.name === cateObj.name) {
+        tempIndex = i;
+        existFlag = true;
+      }
     });
 
-    if (!tempCateArray.includes(category)) {
-      tempCateArray.push(category);
-      tempSingleIcon.push(icon);
-      tempIconArray.push(enveIcon);
-    } else {
-      tempCateArray.splice(tempIndex, 1);
-      tempSingleIcon.splice(tempIndex, 1);
-      tempIconArray.splice(tempIndex, 1);
-    }
+    !existFlag
+      ? tempCateArray.push(cateObj)
+      : tempCateArray.splice(tempIndex, 1);
 
-    const objTemp = objCateList(tempCateArray, tempSingleIcon, tempIconArray);
+    list === 'Needs'
+      ? this.setState({ chosenNeedsCate: tempCateArray })
+      : this.setState({ chosenWantsCate: tempCateArray });
+  }
 
-    list === 'needs'
-      ? this.setState({
-        tempNeedsArray: tempCateArray,
-        singleNeedArray: tempSingleIcon,
-        iconNeedsArray: tempIconArray,
-        chosenNeedsCate: objTemp
-      })
-      : this.setState({
-        tempWantsArray: tempCateArray,
-        singleWantArray: tempSingleIcon,
-        iconWantsArray: tempIconArray,
-        chosenWantsCate: objTemp
-      });
+  handleIncome(cateName) {
+    const budgetId = this.props.budget.budget._id;
+
+    const newCateIncome = {
+      cateName: cateName,
+      incomeInput: this.state.inputIncome
+    };
+
+    this.props.createCategory(newCateIncome, budgetId);
+  }
+
+  handleCates(array) {
+    this.setState({ allCates: array });
   }
 
   onSubmit() {
-    
+    // this.props.createBudget(this.state.newBudget);
   }
 
   render() {
+    const { errors } = this.state;
+
     const navBtns = generateNavBtns(
       this.state.stepNo,
       this.onNavBtnClick,
@@ -137,9 +177,10 @@ class Budget extends Component {
               className="m-element-spacing">
               {this.state.stepNo === 1 ? (
                 <SetPeriod
-                  period={this.state.period}
+                  budgetName={this.state.budgetName}
                   income={this.state.income}
                   handleInput={this.handleInputChange.bind(this)}
+                  errors={errors}
                 />
               ) : this.state.stepNo === 2 ? (
                 <SetCategory
@@ -147,12 +188,14 @@ class Budget extends Component {
                 />
               ) : (
                 <SetMoney
-                  arrayNeeds={this.state.chosenNeedsCate}
-                  arrayWants={this.state.chosenWantsCate}
+                  needsArr={this.state.chosenNeedsCate}
+                  wantsArr={this.state.chosenWantsCate}
                   income={this.state.income}
                   inputIncome={this.state.inputIncome}
-                  handleInput={this.onSubmit}
-                  handleIncome={this.handleInputChange.bind(this)}
+                  catesArr={this.state.allCates}
+                  handleInput={this.handleInputChange.bind(this)}
+                  handleIncome={this.handleIncome.bind(this)}
+                  handleCates={this.handleCates.bind(this)}
                 />
               )}
             </Form>
@@ -169,4 +212,19 @@ class Budget extends Component {
   }
 }
 
-export default Budget;
+Budget.propTypes = {
+  createBudget: PropTypes.func.isRequired,
+  deleteCurrentBudget: PropTypes.func.isRequired,
+  budget: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+  errors: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
+};
+
+const mapStateToProps = state => ({
+  budget: state.budget,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { createBudget, createCategory, deleteCurrentBudget }
+)(Budget);

@@ -12,7 +12,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerUser } from '../../../redux/actions/authActions';
 
-import TextFieldGroup from './textFieldGroup';
+import TextFieldGroup from '../../utils/textFieldGroup';
 
 class Register extends Component {
   constructor(props) {

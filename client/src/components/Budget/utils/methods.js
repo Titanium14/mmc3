@@ -3,8 +3,6 @@ import { Col } from 'reactstrap';
 import Envelope from '../components/envelope';
 import CreateButton from '../components/createButton';
 
-import { savingsIcon, savingsEnve } from './exportImages';
-
 // Budget.js
 
 export const generateNavBtns = (stepNo, navBtn, submitBtn) => (
@@ -70,44 +68,19 @@ export const generatePositions = numCoins => {
   return [xArray, yArray];
 };
 
-export const generateIconsEnves = (
-  toGenerate,
-  needsArray,
-  wantsArray,
-  inputArray
-) => {
+export const generateIconsEnves = (toGenerate, catesArr, incomeArray) => {
   let generatedArray = [];
-  let i, ii;
-  for (i = 0; i < needsArray.length; i++) {
+  let i;
+  for (i = 0; i < catesArr.length; i++) {
     toGenerate === 'Icon'
-      ? generatedArray.push(needsArray[i].imgSrc)
+      ? generatedArray.push(catesArr[i])
       : generatedArray.push(
-        <Envelope
-          key={i}
-          enveIcon={needsArray[i].envelope}
-          allocate={inputArray[i]}
-        />
-      );
+          <Envelope
+            key={i}
+            enveIcon={catesArr[i].envelope}
+            allocate={incomeArray[i]}
+          />
+        );
   }
-  for (ii = 0; ii < wantsArray.length; ii++) {
-    toGenerate === 'Icon'
-      ? generatedArray.push(wantsArray[ii].imgSrc)
-      : generatedArray.push(
-        <Envelope
-          key={ii + i}
-          enveIcon={wantsArray[ii].envelope}
-          allocate={inputArray[ii + i]}
-        />
-      );
-  }
-  toGenerate === 'Icon'
-    ? generatedArray.push(savingsIcon)
-    : generatedArray.push(
-      <Envelope
-        key={ii + i}
-        enveIcon={savingsEnve}
-        allocate={inputArray[ii + i]}
-      />
-    );
   return generatedArray;
 };

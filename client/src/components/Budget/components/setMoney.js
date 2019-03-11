@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { Row, Col, FormGroup, Input, Card, CardBody } from 'reactstrap';
+import { Row, Col, FormGroup, Card, CardBody } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import CreateButton from './createButton';
-import { coinIcon } from '../utils/exportImages';
+import TextFieldGroup from '../../utils/textFieldGroup';
+
+import { coinIcon, savingsIcon, savingsEnve } from '../utils/exportImages';
 import {
   generateCoins,
   generatePositions,
-  generateIconsEnves
+  generateIconsEnves,
+  setIncome
 } from '../utils/methods';
+import { mapAllCates } from '../utils/objectCreator';
 
 class SetMoney extends Component {
   constructor(props) {
@@ -22,7 +26,10 @@ class SetMoney extends Component {
       coinValue: 0,
       initialIncome: this.props.income,
       remainingIncome: this.props.income,
-      inputArray: []
+      incomeArray: [],
+      catesArr: mapAllCates(this.props.needsArr, this.props.wantsArr),
+      saveObj: { name: 'Savings', imgSrc: savingsIcon, envelope: savingsEnve },
+      catesWithSave: []
     };
 
     this.onAddClick = this.onAddClick.bind(this);
@@ -31,19 +38,29 @@ class SetMoney extends Component {
   componentDidMount() {
     const [tempXArray, tempYArray] = generatePositions(this.state.coinStack);
 
+    let testArr = this.props.catesArr;
+
+    for (let i = 0; i < this.state.catesArr.length; i++) {
+      testArr.push(this.state.catesArr[i]);
+    }
+    testArr.push(this.state.saveObj);
+
     this.setState({
       xArray: tempXArray,
       yArray: tempYArray,
-      coinValue: this.state.initialIncome / this.state.coinStack
+      coinValue: this.state.initialIncome / this.state.coinStack,
+      catesWithSave: testArr
     });
+
+    this.props.handleCates(testArr);
   }
 
-  onAddClick() {
-    const input = parseInt(this.props.inputIncome);
-    let tempIncomeArray = this.state.inputArray;
-    tempIncomeArray.push(input);
-    console.log(tempIncomeArray);
+  onAddClick(e) {
+    const target = e.target;
 
+    const input = this.props.inputIncome;
+    let tempIncomeArray = this.state.incomeArray;
+    tempIncomeArray.push(input);
     this.setState(
       {
         stepProg: this.state.stepProg + 1,
@@ -52,31 +69,32 @@ class SetMoney extends Component {
       () => {
         this.setState({
           coinStack: this.state.remainingIncome / this.state.coinValue,
-          inputArray: tempIncomeArray
+          incomeArray: tempIncomeArray
         });
       }
     );
+
+    const id = target.id;
+    this.props.handleIncome(id);
   }
 
   render() {
-    const icons = generateIconsEnves(
-      'Icon',
-      this.props.arrayNeeds,
-      this.props.arrayWants,
-      null
-    );
-    const envelopes = generateIconsEnves(
-      'Envelopes',
-      this.props.arrayNeeds,
-      this.props.arrayWants,
-      this.state.inputArray
-    );
+    let cates = this.state.catesWithSave;
+    let icons, envelopes;
+    if (cates.length !== 0) {
+      icons = generateIconsEnves('Icon', cates, null);
+      envelopes = generateIconsEnves(
+        'Envelopes',
+        cates,
+        this.state.incomeArray
+      );
+    }
 
     const [coins, yPos = 0] = generateCoins(
       this.state.coinStack,
       coinIcon,
       this.state.xArray,
-      this.state.yArray,
+      this.state.yArray
     );
 
     return (
@@ -97,20 +115,23 @@ class SetMoney extends Component {
           <Col lg={2} className="align-self-center">
             <img
               className="m-img-center m-element-spacing-bottom s-img-border"
-              src={icons[this.state.stepProg]}
+              src={icons ? icons[this.state.stepProg].imgSrc : ''}
               alt="..."
             />
-            <Input
-              style={{width: '75%'}}
-              className="m-img-center m-element-spacing-bottom"
+            <TextFieldGroup
               type="text"
-              name="inputIncome"
-              id="textIncome"
+              classes="m-img-center m-element-spacing-bottom s-field-sizing"
               placeholder="in Euro (€)"
-              onChange={this.props.handleIncome}
+              name="inputIncome"
+              value={setIncome(this.props.inputIncome)}
+              onChange={this.props.handleInput}
             />
             <div className="text-center">
-              <CreateButton name="Add" handleBtn={this.onAddClick} />
+              <CreateButton
+                name="Add"
+                iconId={icons ? icons[this.state.stepProg].name : ''}
+                handleBtn={this.onAddClick}
+              />
             </div>
           </Col>
           <Col lg={6}>
@@ -118,7 +139,7 @@ class SetMoney extends Component {
               <Col />
               <Col lg={12}>
                 <Row className="justify-content-start">
-                  {envelopes}
+                  {envelopes ? envelopes : ''}
                 </Row>
               </Col>
               <Col />
@@ -132,9 +153,12 @@ class SetMoney extends Component {
 }
 
 SetMoney.propTypes = {
-  arrayNeeds: PropTypes.array.isRequired,
-  arrayWants: PropTypes.array.isRequired,
+  needsArr: PropTypes.array.isRequired,
+  wantsArr: PropTypes.array.isRequired,
   income: PropTypes.number.isRequired,
+  inputIncome: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
+  catesArr: PropTypes.array.isRequired,
   handleInput: PropTypes.func.isRequired,
   handleIncome: PropTypes.func.isRequired
 };

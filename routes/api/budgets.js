@@ -9,9 +9,6 @@ const validateCategoryInput = require('../../validation/category');
 // Load User model
 const Budget = require('../../models/Budget');
 
-// Load User model
-const User = require('../../models/User');
-
 // @route   GET api/budgets/test
 // @desc    Tests users route
 // @access  Public
@@ -37,27 +34,8 @@ router.get(
   }
 );
 
-// @route   GET api/profile/all
-// @desc    Get all profile
-// @access  Public
-router.get('/all', (req, res) => {
-  const errors = {};
-
-  Budget.find()
-    .populate('user', ['name', 'avatar'])
-    .then(budgets => {
-      if (!budgets) {
-        errors.nobudgets = 'There are no budgets';
-        return res.status(404).json(errors);
-      }
-
-      res.json(budgets);
-    })
-    .catch(err => res.status(404).json({ budgets: 'There are no budgets' }));
-});
-
 // @route   POST api/budgets
-// @desc    Create or edit budgets
+// @desc    Create budgets
 // @access  Private
 router.post(
   '/',
@@ -74,41 +52,72 @@ router.post(
     // Get fields
     const budgetFields = {};
     budgetFields.user = req.user.id;
-    if (req.body.name) budgetFields.name = req.body.name;
+    if (req.body.budgetName) budgetFields.budgetName = req.body.budgetName;
     if (req.body.period) budgetFields.period = req.body.period;
-    if (req.body.incomeTotal) budgetFields.incomeTotal = req.body.incomeTotal;
+    if (req.body.income) budgetFields.income = req.body.income;
 
-    Budget.findOne({ name: budgetFields.name }).then(budget => {
-      if (budget && budget.name !== req.body.name) {
-        // Update
-        Budget.findOneAndUpdate(
-          { user: req.user.id },
-          { $set: budgetFields },
-          { new: true }
-        ).then(budget => res.json(budget));
+    Budget.findOne({ budgetName: budgetFields.budgetName }).then(budget => {
+      // Create
+
+      // Check if budget exists
+      if (budget) {
+        errors.budgetName = 'That budget already exists';
+        res.status(400).json(errors);
       } else {
-        // Create
-
-        // Check if budget exists
-        Budget.findOne({ name: budgetFields.name }).then(budget => {
-          if (budget) {
-            errors.name = 'That budget already exists';
-            res.status(400).json(errors);
-          } else {
-            // Save budget
-            new Budget(budgetFields).save().then(budget => res.json(budget));
-          }
-        });
+        // Save budget
+        new Budget(budgetFields).save().then(budget => res.json(budget));
       }
     });
   }
 );
 
-// @route   POST api/budget/category
+// @route   POST api/budgets/:id
+// @desc    Edit budgets
+// @access  Private
+router.post(
+  '/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateBudgetInput(req.body);
+
+    // Check validation
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+
+    // Get fields
+    const budgetFields = {};
+    budgetFields.user = req.user.id;
+    if (req.body.budgetName) budgetFields.budgetName = req.body.budgetName;
+    if (req.body.period) budgetFields.period = req.body.period;
+    if (req.body.income) budgetFields.income = req.body.income;
+
+    Budget.findOne({ _id: req.params.id })
+      .then(budget => {
+        console.log(budget);
+
+        if (budget) {
+          // Update
+          Budget.findOneAndUpdate(
+            { _id: req.params.id },
+            { $set: budgetFields },
+            { new: true }
+          ).then(budget => res.json(budget));
+        } else {
+          errors.budgetName = 'Failed to update this budget';
+          res.status(400).json(errors);
+        }
+      })
+      .catch(err => res.status(404).json('This budget does not exist'));
+  }
+);
+
+// @route   POST api/budget/:id/category
 // @desc    Add category to budget
 // @access  Private
 router.post(
-  '/category',
+  '/:id/category',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const { errors, isValid } = validateCategoryInput(req.body);
@@ -119,28 +128,31 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    Budget.findOne({ user: req.user.id }).then(budget => {
+    /* If the program evolves to allow users to input their own categories,
+       apply error-checking to verify that the inputted categories does not already exist. */
+
+    Budget.findOne({ _id: req.params.id }).then(budget => {
       const newCate = {
-        name: req.body.name,
-        income: req.body.income
+        cateName: req.body.cateName,
+        incomeInput: req.body.incomeInput
       };
 
       // Add to cate array
-      budget.category.unshift(newCate);
+      budget.category.push(newCate);
 
       budget.save().then(budget => res.json(budget));
     });
   }
 );
 
-// @route   DELETE api/budget/category/:cate_id
+// @route   DELETE api/budget/:id/category/:cate_id
 // @desc    Delete category from budget
 // @access  Private
 router.delete(
-  '/category/:cate_id',
+  '/:id/category/:cate_id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Budget.findOne({ user: req.user.id })
+    Budget.findOne({ _id: req.params.id })
       .then(budget => {
         const errors = {};
 
@@ -172,7 +184,7 @@ router.delete(
   '/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Budget.findOneAndRemove({ user: req.user.id }).then(() => {
+    Budget.findOneAndRemove({ _id: req.params.id }).then(() => {
       res.json({ success: true });
     });
   }
