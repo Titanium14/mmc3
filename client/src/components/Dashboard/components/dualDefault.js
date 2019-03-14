@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   CardTitle,
+  CardText,
   CardImg,
   ButtonGroup,
   Button
@@ -28,13 +29,22 @@ const DualDefault = props => {
               className="m-element-block-display s-btns-design"
               size="sm"
               vertical>
-              <Button onClick={props.onBudgets} className="rounded" color="primary">
+              <Button
+                onClick={props.onBudgets}
+                className="rounded"
+                color="primary">
                 My Budget
               </Button>
-              <Button onClick={props.onGames} className="rounded" color="primary">
+              <Button
+                onClick={props.onGames}
+                className="rounded"
+                color="primary">
                 My Games
               </Button>
-              <Button onClick={props.onAbout} className="rounded" color="primary">
+              <Button
+                onClick={props.onAbout}
+                className="rounded"
+                color="primary">
                 About Me
               </Button>
             </ButtonGroup>
@@ -43,7 +53,11 @@ const DualDefault = props => {
       </Col>
       <Col lg={5}>
         <Card>
-          <CardBody>A</CardBody>
+          <CardBody>
+            <CardText tag="p">
+              Hello, {props.user.name}! Welcome to your dashboard!
+            </CardText>
+          </CardBody>
         </Card>
       </Col>
     </>
