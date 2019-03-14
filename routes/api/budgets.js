@@ -15,7 +15,7 @@ const Budget = require('../../models/Budget');
 router.get('/test', (req, res) => res.json({ msg: 'Budget works' }));
 
 // @route   GET api/budgets
-// @desc    Get current user's budget
+// @desc    Get current user's budgets
 // @access  Private
 router.get(
   '/',
@@ -25,7 +25,27 @@ router.get(
     Budget.find({ user: req.user.id })
       .then(budgets => {
         if (!budgets) {
-          errors.nobudgets = 'There is no budgets for this user';
+          errors.nobudgets = 'There are no budgets for this user';
+          return res.status(404).json(errors);
+        }
+        res.json(budgets);
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
+
+// @route   GET api/budgets/:id
+// @desc    Get specified budget of current user
+// @access  Private
+router.get(
+  '/:id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+    Budget.findOne({ _id: req.params.id })
+      .then(budgets => {
+        if (!budgets) {
+          errors.nobudget = 'This budget does not exist';
           return res.status(404).json(errors);
         }
         res.json(budgets);
@@ -95,8 +115,6 @@ router.post(
 
     Budget.findOne({ _id: req.params.id })
       .then(budget => {
-        console.log(budget);
-
         if (budget) {
           // Update
           Budget.findOneAndUpdate(

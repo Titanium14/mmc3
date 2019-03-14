@@ -11,7 +11,8 @@ const CreateButton = props => {
       onClick={props.handleBtn}
       className="s-btn-color s-remove-event"
       color="primary"
-      id={props.iconId ? props.iconId : ''}>
+      id={props.iconId}
+      disabled={!props.iconId && props.name === 'Add' ? true : false}>
       {props.name === 'Back' ? (
         <h4 className="s-weight">
           <img

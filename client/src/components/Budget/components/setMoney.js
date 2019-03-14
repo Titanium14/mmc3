@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, FormGroup, Card, CardBody } from 'reactstrap';
+import { Row, Col, FormGroup, Card, CardBody, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import CreateButton from './createButton';
@@ -27,7 +27,7 @@ class SetMoney extends Component {
       initialIncome: this.props.income,
       remainingIncome: this.props.income,
       incomeArray: [],
-      catesArr: mapAllCates(this.props.needsArr, this.props.wantsArr),
+      mappingCates: mapAllCates(this.props.needsArr, this.props.wantsArr),
       saveObj: { name: 'Savings', imgSrc: savingsIcon, envelope: savingsEnve },
       catesWithSave: []
     };
@@ -38,21 +38,21 @@ class SetMoney extends Component {
   componentDidMount() {
     const [tempXArray, tempYArray] = generatePositions(this.state.coinStack);
 
-    let testArr = this.props.catesArr;
+    let budgetCates = [];
 
-    for (let i = 0; i < this.state.catesArr.length; i++) {
-      testArr.push(this.state.catesArr[i]);
+    for (let i = 0; i < this.state.mappingCates.length; i++) {
+      budgetCates.push(this.state.mappingCates[i]);
     }
-    testArr.push(this.state.saveObj);
+    budgetCates.push(this.state.saveObj);
 
     this.setState({
       xArray: tempXArray,
       yArray: tempYArray,
       coinValue: this.state.initialIncome / this.state.coinStack,
-      catesWithSave: testArr
+      catesWithSave: budgetCates
     });
 
-    this.props.handleCates(testArr);
+    this.props.handleCates(budgetCates);
   }
 
   onAddClick(e) {
@@ -75,19 +75,23 @@ class SetMoney extends Component {
     );
 
     const id = target.id;
-    this.props.handleIncome(id);
+    let submitComplete = '';
+    if (id === 'Savings') submitComplete = 'Completed';
+    this.props.handleIncome(id, submitComplete);
   }
 
   render() {
     let cates = this.state.catesWithSave;
-    let icons, envelopes;
+    let icons, enves;
+    let iconImg = 'https://placeholdit.imgix.net/~text?txtsize=14&w=48&h=48';
+    let iconName = '';
     if (cates.length !== 0) {
       icons = generateIconsEnves('Icon', cates, null);
-      envelopes = generateIconsEnves(
-        'Envelopes',
-        cates,
-        this.state.incomeArray
-      );
+      enves = generateIconsEnves('Envelopes', cates, this.state.incomeArray);
+      if (this.state.stepProg < icons.length) {
+        iconImg = icons[this.state.stepProg].imgSrc;
+        iconName = icons[this.state.stepProg].name;
+      }
     }
 
     const [coins, yPos = 0] = generateCoins(
@@ -108,14 +112,16 @@ class SetMoney extends Component {
             <h2 className="m-main-color text-center">Remaining</h2>
             <Card>
               <CardBody className="text-center">
-                {this.state.remainingIncome}
+                {this.state.remainingIncome >= 0
+                  ? this.state.remainingIncome
+                  : 0}
               </CardBody>
             </Card>
           </Col>
           <Col lg={2} className="align-self-center">
             <img
               className="m-img-center m-element-spacing-bottom s-img-border"
-              src={icons ? icons[this.state.stepProg].imgSrc : ''}
+              src={iconImg}
               alt="..."
             />
             <TextFieldGroup
@@ -129,7 +135,7 @@ class SetMoney extends Component {
             <div className="text-center">
               <CreateButton
                 name="Add"
-                iconId={icons ? icons[this.state.stepProg].name : ''}
+                iconId={iconName}
                 handleBtn={this.onAddClick}
               />
             </div>
@@ -139,7 +145,16 @@ class SetMoney extends Component {
               <Col />
               <Col lg={12}>
                 <Row className="justify-content-start">
-                  {envelopes ? envelopes : ''}
+                  {this.props.ready === 'Incomplete' ? (
+                    <Col lg={12}>
+                      <Alert color="warning" className="text-center">
+                        Please complete all fields
+                      </Alert>
+                    </Col>
+                  ) : (
+                    <></>
+                  )}
+                  {enves ? enves : ''}
                 </Row>
               </Col>
               <Col />
@@ -156,11 +171,12 @@ SetMoney.propTypes = {
   needsArr: PropTypes.array.isRequired,
   wantsArr: PropTypes.array.isRequired,
   income: PropTypes.number.isRequired,
+  ready: PropTypes.string,
   inputIncome: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     .isRequired,
-  catesArr: PropTypes.array.isRequired,
   handleInput: PropTypes.func.isRequired,
-  handleIncome: PropTypes.func.isRequired
+  handleIncome: PropTypes.func.isRequired,
+  handleCates: PropTypes.func.isRequired
 };
 
 export default SetMoney;

@@ -9,8 +9,7 @@ class CategoryList extends Component {
     super(props);
 
     this.state = {
-      btnColor: '',
-      colorState: false
+      colorState: this.props.item === this.props.selectedCate ? true : false
     };
 
     this.handleCateState = this.handleCateState.bind(this);
@@ -18,6 +17,8 @@ class CategoryList extends Component {
 
   handleCateState(e) {
     e.preventDefault();
+    const target = e.target;
+    const id = target.id;
 
     const singleCate = objSingleCate(
       this.props.item,
@@ -27,22 +28,29 @@ class CategoryList extends Component {
 
     if (!this.state.colorState) {
       this.props.listName === 'Needs'
-        ? this.setState({ btnColor: 'success', colorState: true })
-        : this.setState({ btnColor: 'info', colorState: true });
+        ? this.setState({ colorState: true })
+        : this.setState({ colorState: true });
     } else {
-      this.setState({ btnColor: '', colorState: false });
+      this.setState({ colorState: false });
     }
 
-    this.props.handleCateClicked(singleCate, this.props.listName);
+    this.props.handleCateClicked(singleCate, this.props.listName, id);
   }
 
   render() {
     return (
       <ListGroupItem
         name={this.props.listName}
+        id={this.props.item}
         tag="button"
         onClick={this.handleCateState}
-        color={this.state.btnColor}
+        color={
+          !this.state.colorState
+            ? ''
+            : this.props.listName === 'Needs'
+            ? 'success'
+            : 'info'
+        }
         action>
         <img
           className="m-element-spacing-right s-remove-event-cate s-sizing"
@@ -59,6 +67,8 @@ CategoryList.propTypes = {
   listName: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
   item: PropTypes.string.isRequired,
+  enveIcon: PropTypes.string.isRequired,
+  selectedCate: PropTypes.string,
   handleCateClicked: PropTypes.func.isRequired
 };
 

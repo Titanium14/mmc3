@@ -16,8 +16,11 @@ export const objCateList = (customArray, icons, enveIcons) => {
   return createdObjects;
 };
 
-export const mapCategories = (listName, listArray, clickEvent) => {
+export const mapCategories = (listName, listArray, selectArray, clickEvent) => {
   const mapedCate = listArray.map((m, i) => {
+    let chosen;
+    selectArray.includes(m.name) ? (chosen = m.name) : (chosen = '');
+
     i++;
     return (
       <CategoryList
@@ -26,6 +29,7 @@ export const mapCategories = (listName, listArray, clickEvent) => {
         item={m.name}
         icon={m.imgSrc}
         enveIcon={m.envelope}
+        selectedCate={chosen}
         handleCateClicked={clickEvent}
       />
     );
@@ -48,18 +52,8 @@ export const objSingleCate = (category, icon, enveIcon) => {
 // setMoney.js
 
 export const mapAllCates = (needsArr, wantsArr) => {
-  let allCateArr = [];
-
-  if (needsArr.length !== 0 && wantsArr.length !== 0) {
-    for (let i = 0; i < wantsArr.length; i++) {
-      needsArr.push(wantsArr[i]);
-    }
-    allCateArr = needsArr;
-  } else if (needsArr.length !== 0 && wantsArr.length === 0) {
-    allCateArr = needsArr;
-  } else if (needsArr.length === 0 && wantsArr.length !== 0) {
-    allCateArr = wantsArr;
-  }
-
+  let tempNeeds = needsArr.map(n => n);
+  let tempWants = wantsArr.map(w => w);
+  let allCateArr = [...new Set([...tempNeeds, ...tempWants])];
   return allCateArr;
 };

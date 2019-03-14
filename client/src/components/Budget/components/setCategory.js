@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { Row, Col, FormGroup, Card, CardHeader, ListGroup } from 'reactstrap';
+import {
+  Row,
+  Col,
+  FormGroup,
+  Card,
+  CardHeader,
+  ListGroup,
+  Alert
+} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import {
@@ -17,32 +25,40 @@ class SetCategory extends Component {
     super(props);
 
     this.state = {
-      needsObj: [],
-      wantsObj: []
-    };
-  }
-
-  componentDidMount() {
-    this.setState({
       needsObj: objCateList(cateNeeds, iconNeeds, enveNeedsIcon),
       wantsObj: objCateList(cateWants, iconWants, enveWantsIcon)
-    });
+    };
   }
 
   render() {
     const needsList = mapCategories(
       'Needs',
       this.state.needsObj,
+      this.props.selectedNeeds,
       this.props.handleCateClicked
     );
     const wantsList = mapCategories(
       'Wants',
       this.state.wantsObj,
+      this.props.selectedWants,
       this.props.handleCateClicked
     );
 
     return (
       <FormGroup>
+        {this.props.noCateFlag ? (
+          <Row>
+            <Col />
+            <Col lg={8}>
+              <Alert color="warning" className="text-center">
+                Please choose at least one budget category
+              </Alert>
+            </Col>
+            <Col />
+          </Row>
+        ) : (
+          <></>
+        )}
         <Row>
           <Col />
           <Col lg={5}>
@@ -65,6 +81,9 @@ class SetCategory extends Component {
 }
 
 SetCategory.propTypes = {
+  noCateFlag: PropTypes.bool.isRequired,
+  selectedNeeds: PropTypes.array.isRequired,
+  selectedWants: PropTypes.array.isRequired,
   handleCateClicked: PropTypes.func.isRequired
 };
 

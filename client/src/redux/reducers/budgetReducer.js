@@ -1,5 +1,6 @@
 import {
   GET_BUDGET,
+  GET_BUDGETS,
   SET_BUDGET,
   GET_CATEGORY,
   SET_CATEGORY
@@ -7,6 +8,7 @@ import {
 
 const initialState = {
   budget: {},
+  budgets: {},
   category: {}
 };
 
@@ -16,6 +18,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         budget: action.payload
+      };
+    case GET_BUDGETS:
+      return {
+        ...state,
+        budgets: action.payload
       };
     case SET_BUDGET:
       return {

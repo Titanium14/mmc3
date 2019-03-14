@@ -38,6 +38,8 @@ import enveTake from '../components/assets/enve-take.png';
 import savings from '../components/assets/savings.png';
 import enveSave from '../components/assets/enve-save.png';
 
+import nameTag from '../components/assets/name.png';
+
 export const arrowIcon = arrow;
 
 export const calendarIcon = calendar;
@@ -47,6 +49,8 @@ export const coinIcon = coin;
 
 export const savingsIcon = savings;
 export const savingsEnve = enveSave;
+
+export const nameIcon = nameTag;
 
 export const iconNeeds = [
   groceries,

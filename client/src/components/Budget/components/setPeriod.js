@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import PeriodFields from './periodFields';
 
 import { setIncome } from '../utils/methods';
-import { calendarIcon, incomeBagIcon } from '../utils/exportImages';
+import { nameIcon, calendarIcon, incomeBagIcon } from '../utils/exportImages';
 
 const SetPeriod = props => {
   return (
@@ -16,7 +16,7 @@ const SetPeriod = props => {
         placeholder="Enter the name of the budget here"
         valueInput={props.budgetName}
         handleInput={props.handleInput}
-        icon={calendarIcon}
+        icon={nameIcon}
         error={props.errors.budgetName ? props.errors.budgetName : ''}
       />
       <PeriodFields
