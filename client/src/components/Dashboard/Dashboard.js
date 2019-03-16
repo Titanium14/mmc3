@@ -17,22 +17,20 @@ class Dashboard extends Component {
 
     this.state = {
       content: '',
-      budgets: [],
+      budgetsArr: [],
       singleBud: {}
     };
   }
 
-  onBudgetClick() {
+  componentDidMount() {
     this.props.getBudgets();
+  }
 
-    let budgetsData;
+  onBudgetClick() {
+    const budgetsData = this.props.budget.budgets;
     setTimeout(() => {
-      budgetsData = this.props.budget.budgets;
+      this.setState({ content: 'Budget', budgetsArr: budgetsData });
     }, 300);
-    
-    setTimeout(() => {
-      this.setState({ content: 'Budget', budgets: budgetsData });
-    }, 800);
   }
 
   onGamesClick() {
@@ -72,7 +70,7 @@ class Dashboard extends Component {
         <Col />
         {this.state.content === 'Budget' ? (
           <DualBudgets
-            budgets={this.state.budgets}
+            budgetsArr={this.state.budgetsArr}
             singleBud={this.state.singleBud}
             onSingle={this.onSingleBudget.bind(this)}
             onBack={this.onBackClick.bind(this)}
@@ -97,7 +95,9 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
-  budget: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+  budget: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  getBudget: PropTypes.func.isRequired,
+  getBudgets: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

@@ -8,6 +8,9 @@ import {
   Button
 } from 'reactstrap';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { deleteCurrentBudget } from '../../../redux/actions/budgetActions';
 
 import DisplayBudget from './displayBudget';
 
@@ -22,13 +25,27 @@ class DualBudgets extends Component {
 
   componentDidMount() {
     setTimeout(() => {
-      this.setState({ budArr: this.props.budgets });
+      this.setState({ budArr: this.props.budgetsArr });
     }, 300);
+  }
+
+  onDelete(e) {
+    const target = e.target;
+    const id = target.id;
+
+    this.props.deleteCurrentBudget(id);
+
+    setTimeout(() => {
+      this.props.history.push('/Loading');
+    }, 300);
+
+    setTimeout(() => {
+      this.props.history.push('/Dashboard');
+    }, 700);
   }
 
   render() {
     let budgetBtns;
-    console.log(this.state.budArr);
 
     if (this.state.budArr.length !== 0) {
       budgetBtns = this.state.budArr.map(b => (
@@ -69,8 +86,11 @@ class DualBudgets extends Component {
         </Col>
         <Col lg={5}>
           <Card>
-            <CardBody>
-              <DisplayBudget displayBud={this.props.singleBud} />
+            <CardBody className="text-center">
+              <DisplayBudget
+                displayBud={this.props.singleBud}
+                onDelete={this.onDelete.bind(this)}
+              />
             </CardBody>
           </Card>
         </Col>
@@ -80,10 +100,19 @@ class DualBudgets extends Component {
 }
 
 DualBudgets.propTypes = {
-  budgets: PropTypes.array.isRequired,
+  budget: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  deleteCurrentBudget: PropTypes.func.isRequired,
+  budgetsArr: PropTypes.array.isRequired,
   singleBud: PropTypes.object,
   onSingle: PropTypes.func.isRequired,
   onBack: PropTypes.func.isRequired
 };
 
-export default DualBudgets;
+const mapStateToProps = state => ({
+  budget: state.budget
+});
+
+export default connect(
+  mapStateToProps,
+  { deleteCurrentBudget }
+)(withRouter(DualBudgets));

@@ -12,7 +12,7 @@ const CreateButton = props => {
       className="s-btn-color s-remove-event"
       color="primary"
       id={props.iconId}
-      disabled={!props.iconId && props.name === 'Add' ? true : false}>
+      disabled={props.usedAll ? true : false}>
       {props.name === 'Back' ? (
         <h4 className="s-weight">
           <img
@@ -41,7 +41,8 @@ const CreateButton = props => {
 CreateButton.propTypes = {
   name: PropTypes.string.isRequired,
   iconId: PropTypes.string,
-  handleBtn: PropTypes.func.isRequired
+  handleBtn: PropTypes.func.isRequired,
+  usedAll: PropTypes.bool
 };
 
 export default CreateButton;

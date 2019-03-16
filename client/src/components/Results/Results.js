@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, CardBody, CardTitle } from 'reactstrap';
+import {
+  Row,
+  Col,
+  Card,
+  CardBody,
+  CardTitle,
+  CardText,
+  CardImg
+} from 'reactstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { getBudget } from '../../redux/actions/budgetActions';
 
-import { ribbonIcon } from './utils/exportImages';
+import { ribbonTier1, ribbonTier2, ribbonTier3 } from './utils/exportImages';
 
 import BudgetCard from './components/budgetCard';
 import Chart from '../utils/chart';
@@ -15,7 +23,6 @@ class Results extends Component {
     super(props);
 
     this.state = {
-      ribbons: [],
       resultBud: {},
       cards: []
     };
@@ -25,13 +32,6 @@ class Results extends Component {
     if (!this.props.budget.budget._id) {
       this.props.history.push('/');
     } else {
-      let ribbonArray = [];
-      for (let i = 0; i < 16; i++) {
-        ribbonArray.push(
-          <img style={{ width: '12.5%' }} key={i} src={ribbonIcon} alt="..." />
-        );
-      }
-
       const id = this.props.budget.budget._id;
       this.props.getBudget(id);
 
@@ -45,7 +45,6 @@ class Results extends Component {
           );
         });
         this.setState({
-          ribbons: ribbonArray,
           resultBud: budgetData,
           cards: budgetCards
         });
@@ -54,6 +53,18 @@ class Results extends Component {
   }
 
   render() {
+    let saveIncome = 0;
+    let totalIncome = 0;
+    if (
+      Object.entries(this.state.resultBud).length !== 0 &&
+      this.state.resultBud.constructor === Object
+    ) {
+      const arr = this.state.resultBud.category;
+      saveIncome = arr[arr.length - 1].incomeInput;
+
+      totalIncome = this.state.resultBud.income;
+    }
+
     return (
       <>
         <Row className="m-element-spacing-top" noGutters>
@@ -100,7 +111,24 @@ class Results extends Component {
           <Col lg={10}>
             <h1 className="m-main-color">Awards</h1>
             <Card>
-              <CardBody>{this.state.ribbons}</CardBody>
+              <CardBody>
+                <CardTitle className="text-center" tag="h1">
+                  Congratulations!
+                </CardTitle>
+                <CardText className="text-center" tag="p">
+                  You have saved €{''}
+                  {Object.entries(this.state.resultBud).length !== 0 &&
+                  this.state.resultBud.constructor === Object
+                    ? saveIncome
+                    : 0}
+                </CardText>
+                <CardImg
+                  className="m-img-center"
+                  style={{ width: '12.5%' }}
+                  src={(saveIncome * 100) / totalIncome >= 50 ? ribbonTier3 : (saveIncome * 100) / totalIncome >= 35 ? ribbonTier2 : ribbonTier1 }
+                  alt="..."
+                />
+              </CardBody>
             </Card>
           </Col>
           <Col />

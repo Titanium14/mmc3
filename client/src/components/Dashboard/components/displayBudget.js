@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardTitle, CardText } from 'reactstrap';
+import { CardTitle, CardText, Button } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import Chart from '../../utils/chart';
@@ -23,6 +23,13 @@ const DisplayBudget = props => {
             income={props.displayBud.income}
             period={props.displayBud.period}
           />
+          <Button
+            id={props.displayBud._id}
+            onClick={props.onDelete}
+            color="danger"
+            className="s-delete-btn">
+            Delete this budget
+          </Button>
         </>
       ) : (
         <CardText tag="p">
@@ -34,7 +41,8 @@ const DisplayBudget = props => {
 };
 
 DisplayBudget.propTypes = {
-  displayBud: PropTypes.object
+  displayBud: PropTypes.object,
+  onDelete: PropTypes.func.isRequired
 };
 
 export default DisplayBudget;

@@ -6,8 +6,7 @@ import { connect } from 'react-redux';
 import {
   getBudgets,
   createBudget,
-  createCategory,
-  deleteCurrentBudget
+  createCategory
 } from '../../redux/actions/budgetActions';
 
 import './Budget.css';
@@ -52,7 +51,8 @@ class Budget extends Component {
       budFields: {},
       cateFields: [],
 
-      readyFlag: ''
+      readyFlag: '',
+      usedAll: false
     };
 
     this.onNavBtnClick = this.onNavBtnClick.bind(this);
@@ -182,6 +182,10 @@ class Budget extends Component {
     this.setState({ allCates: array });
   }
 
+  handleUsedIncome(usedBool) {
+    this.setState({ usedAll: usedBool });
+  }
+
   onSubmit(e) {
     e.preventDefault();
 
@@ -207,7 +211,8 @@ class Budget extends Component {
     const navBtns = generateNavBtns(
       this.state.stepNo,
       this.onNavBtnClick,
-      this.onSubmit
+      this.onSubmit,
+      this.state.usedAll
     );
     return (
       <>
@@ -254,6 +259,8 @@ class Budget extends Component {
                   handleInput={this.handleInputChange.bind(this)}
                   handleIncome={this.handleIncome.bind(this)}
                   handleCates={this.handleCates.bind(this)}
+                  usedAll={this.state.usedAll}
+                  handleUsedIncome={this.handleUsedIncome.bind(this)}
                 />
               )}
             </Form>
@@ -271,8 +278,9 @@ class Budget extends Component {
 }
 
 Budget.propTypes = {
+  getBudgets: PropTypes.func.isRequired,
   createBudget: PropTypes.func.isRequired,
-  deleteCurrentBudget: PropTypes.func.isRequired,
+  createCategory: PropTypes.func.isRequired,
   auth: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   budget: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   errors: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
@@ -286,5 +294,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getBudgets, createBudget, createCategory, deleteCurrentBudget }
+  { getBudgets, createBudget, createCategory }
 )(withRouter(Budget));

@@ -5,7 +5,7 @@ import CreateButton from '../components/createButton';
 
 // Budget.js
 
-export const generateNavBtns = (stepNo, navBtn, submitBtn) => (
+export const generateNavBtns = (stepNo, navBtn, submitBtn, usedIncome) => (
   <>
     {stepNo !== 1 ? (
       <Col lg={1}>
@@ -19,7 +19,11 @@ export const generateNavBtns = (stepNo, navBtn, submitBtn) => (
       {stepNo < 3 ? (
         <CreateButton name="Next" handleBtn={navBtn} />
       ) : (
-        <CreateButton name="Submit" handleBtn={submitBtn} />
+        <CreateButton
+          name="Submit"
+          handleBtn={submitBtn}
+          usedAll={usedIncome}
+        />
       )}
     </Col>
   </>

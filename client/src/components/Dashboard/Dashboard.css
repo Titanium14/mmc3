@@ -7,10 +7,15 @@
   width: 65%;
 }
 
-.s-btns-design button, .s-btn-spacing button {
+.s-btns-design button,
+.s-btn-spacing button {
   margin: 5px 0;
 }
 
 .s-games-btn {
   margin: 15px auto;
+}
+
+.s-delete-btn {
+  margin-top: 15px;
 }

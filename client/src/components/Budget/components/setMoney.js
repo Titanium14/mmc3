@@ -33,6 +33,7 @@ class SetMoney extends Component {
     };
 
     this.onAddClick = this.onAddClick.bind(this);
+    this.onResetClick = this.onResetClick.bind(this);
   }
 
   componentDidMount() {
@@ -61,12 +62,22 @@ class SetMoney extends Component {
     const input = this.props.inputIncome;
     let tempIncomeArray = this.state.incomeArray;
     tempIncomeArray.push(input);
+
+    let usedFlag = this.props.usedAll;
     this.setState(
       {
         stepProg: this.state.stepProg + 1,
         remainingIncome: this.state.remainingIncome - this.props.inputIncome
       },
       () => {
+        if (
+          (this.state.remainingIncome <= 0 &&
+            this.state.stepProg !== this.state.catesWithSave.length) ||
+          (this.state.remainingIncome > 0 &&
+            this.state.stepProg === this.state.catesWithSave.length)
+        )
+          usedFlag = true;
+        this.props.handleUsedIncome(usedFlag);
         this.setState({
           coinStack: this.state.remainingIncome / this.state.coinValue,
           incomeArray: tempIncomeArray
@@ -78,6 +89,17 @@ class SetMoney extends Component {
     let submitComplete = '';
     if (id === 'Savings') submitComplete = 'Completed';
     this.props.handleIncome(id, submitComplete);
+  }
+
+  onResetClick() {
+    let exceedFlag = false;
+    this.setState({
+      incomeArray: [],
+      remainingIncome: this.state.initialIncome,
+      stepProg: 0,
+      coinStack: 20
+    });
+    this.props.handleUsedIncome(exceedFlag);
   }
 
   render() {
@@ -134,9 +156,24 @@ class SetMoney extends Component {
             />
             <div className="text-center">
               <CreateButton
-                name="Add"
-                iconId={iconName}
-                handleBtn={this.onAddClick}
+                name={
+                  (this.state.remainingIncome <= 0 &&
+                    this.state.stepProg !== this.state.catesWithSave.length) ||
+                  this.props.usedAll
+                    ? 'Reset'
+                    : 'Add'
+                }
+                iconId={
+                  this.state.remainingIncome <= 0 &&
+                  this.state.stepProg !== this.state.catesWithSave.length
+                    ? ''
+                    : iconName
+                }
+                handleBtn={
+                  this.state.remainingIncome <= 0 || this.props.usedAll
+                    ? this.onResetClick
+                    : this.onAddClick
+                }
               />
             </div>
           </Col>
@@ -149,6 +186,20 @@ class SetMoney extends Component {
                     <Col lg={12}>
                       <Alert color="warning" className="text-center">
                         Please complete all fields
+                      </Alert>
+                    </Col>
+                  ) : this.state.remainingIncome <= 0 &&
+                    this.state.stepProg !== this.state.catesWithSave.length ? (
+                    <Col lg={12}>
+                      <Alert color="danger" className="text-center">
+                        Total income exceeded. Please make sure your income is
+                        evenly spread.
+                      </Alert>
+                    </Col>
+                  ) : this.state.remainingIncome > 0 && this.props.usedAll ? (
+                    <Col lg={12}>
+                      <Alert color="danger" className="text-center">
+                        There is still some money leftover. Have you saved yet?
                       </Alert>
                     </Col>
                   ) : (
@@ -176,7 +227,9 @@ SetMoney.propTypes = {
     .isRequired,
   handleInput: PropTypes.func.isRequired,
   handleIncome: PropTypes.func.isRequired,
-  handleCates: PropTypes.func.isRequired
+  handleCates: PropTypes.func.isRequired,
+  usedAll: PropTypes.bool.isRequired,
+  handleUsedIncome: PropTypes.func.isRequired
 };
 
 export default SetMoney;
