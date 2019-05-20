@@ -219,7 +219,7 @@ class Budget extends Component {
         {this.state.stepNo < 4 ? (
           <Row noGutters>
             <Col />
-            <Col lg={10}>
+            <Col md={10}>
               <StepGuide
                 name="Steps"
                 step={this.state.stepNo}
@@ -233,7 +233,7 @@ class Budget extends Component {
         )}
         <Row noGutters>
           <Col />
-          <Col lg={this.state.stepNo < 3 ? 6 : 8}>
+          <Col lg={this.state.stepNo !== 1 ? 8 :6} md={8} sm={10} xs={12}>
             <Form onSubmit={this.onSubmit} className="m-element-spacing">
               {this.state.stepNo === 1 ? (
                 <SetPeriod
@@ -241,6 +241,7 @@ class Budget extends Component {
                   income={this.state.income}
                   handleInput={this.handleInputChange.bind(this)}
                   errors={errors}
+                  winWidth={this.props.winWidth}
                 />
               ) : this.state.stepNo === 2 ? (
                 <SetCategory
@@ -248,6 +249,7 @@ class Budget extends Component {
                   selectedNeeds={this.state.selNeeds}
                   selectedWants={this.state.selWants}
                   handleCateClicked={this.onCateClicked.bind(this)}
+                  winWidth={this.props.winWidth}
                 />
               ) : (
                 <SetMoney
@@ -261,13 +263,14 @@ class Budget extends Component {
                   handleCates={this.handleCates.bind(this)}
                   usedAll={this.state.usedAll}
                   handleUsedIncome={this.handleUsedIncome.bind(this)}
+                  winWidth={this.props.winWidth}
                 />
               )}
             </Form>
           </Col>
           <Col />
         </Row>
-        <Row className="m-element-spacing">
+        <Row className="m-element-spacing" noGutters>
           <Col />
           {navBtns}
           <Col />

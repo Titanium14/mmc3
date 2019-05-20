@@ -61,38 +61,44 @@ class DualBudgets extends Component {
 
     return (
       <>
-        <Col lg={3}>
-          <Card>
-            <CardBody className="s-card-bg">
-              <CardTitle tag="h3" className="text-center">
-                My Budgets
-              </CardTitle>
-              <ButtonGroup
-                className="m-element-block-display s-btns-design"
-                size="sm"
-                vertical>
-                {budgetBtns}
-              </ButtonGroup>
-              <ButtonGroup
-                className="m-element-block-display s-btns-design"
-                size="sm"
-                vertical>
-                <Button onClick={this.props.onBack} color="primary">
-                  Back
-                </Button>
-              </ButtonGroup>
-            </CardBody>
-          </Card>
+        <Col md={4}>
+          <div className={this.props.winWidth < 782 ? 's-card-padding' : ''}>
+            <Card>
+              <CardBody className="s-card-bg">
+                <CardTitle tag="h3" className="text-center">
+                  My Budgets
+                </CardTitle>
+                <ButtonGroup
+                  className="m-element-block-display s-btns-design"
+                  size="sm"
+                  vertical>
+                  {budgetBtns}
+                </ButtonGroup>
+                <ButtonGroup
+                  className="m-element-block-display s-btns-design"
+                  size="sm"
+                  vertical>
+                  <Button onClick={this.props.onBack} color="primary">
+                    Back
+                  </Button>
+                </ButtonGroup>
+              </CardBody>
+            </Card>
+          </div>
         </Col>
-        <Col lg={5}>
-          <Card>
-            <CardBody className="text-center">
-              <DisplayBudget
-                displayBud={this.props.singleBud}
-                onDelete={this.onDelete.bind(this)}
-              />
-            </CardBody>
-          </Card>
+        <Col
+          md={6}
+          className={this.props.winWidth < 782 ? 'm-element-spacing-top' : ''}>
+          <div className={this.props.winWidth < 782 ? 's-card-padding' : ''}>
+            <Card>
+              <CardBody className="text-center">
+                <DisplayBudget
+                  displayBud={this.props.singleBud}
+                  onDelete={this.onDelete.bind(this)}
+                />
+              </CardBody>
+            </Card>
+          </div>
         </Col>
       </>
     );

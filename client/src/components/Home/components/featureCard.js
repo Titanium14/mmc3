@@ -1,27 +1,23 @@
 import React from 'react';
-import {
-  Col,
-  Card,
-  CardImg,
-  CardImgOverlay,
-  CardTitle,
-  CardText,
-  Button
-} from 'reactstrap';
+import { Col, Card, CardImg, CardBody, CardTitle, CardText } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 const FeatureCard = props => {
   return (
-    <Col lg={4}>
-      <Card inverse>
-        <CardImg width="100%" src={props.imgSrc} alt="..." />
-        <CardImgOverlay>
+    <Col className="s-card-padding" sm={4}>
+      <Card>
+        <CardImg className="border" src={props.imgSrc} alt="..." />
+        <CardBody>
           <CardTitle tag="h3">{props.title}</CardTitle>
           <CardText tag="p">{props.text}</CardText>
-          <Button color="primary">{props.button}</Button>
-        </CardImgOverlay>
+        </CardBody>
       </Card>
     </Col>
   );
+};
+
+FeatureCard.propTypes = {
+  winWidth: PropTypes.number.isRequired
 };
 
 export default FeatureCard;

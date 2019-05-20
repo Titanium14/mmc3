@@ -75,7 +75,7 @@ class Login extends Component {
           Log In
         </CardHeader>
         <CardBody>
-          <Form onSubmit={this.onSubmit}>
+          <Form onSubmit={this.onSubmit} className="s-pad-fields">
             <TextFieldGroup
               placeholder="Email Address"
               name="email"
@@ -92,7 +92,7 @@ class Login extends Component {
               onChange={this.onChange}
               error={errors.password}
             />
-            <FormGroup row>
+            <FormGroup>
               <Button color="primary" block>
                 Login
               </Button>

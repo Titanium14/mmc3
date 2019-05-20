@@ -40,6 +40,15 @@
   position: relative;
 }
 
+.s-coin-responsive {
+  width: 50%;
+  margin: 0 25%;
+}
+
+.s-add-space {
+  margin-top: 22%;
+}
+
 .s-img-border {
   border: 1px solid #000;
   padding: 15px;
@@ -52,4 +61,37 @@
 
 .s-field-sizing {
   width: 75%;
+}
+
+.s-field-padding {
+  padding: 0 15px;
+}
+
+.s-card-padding {
+  padding: 0 30px;
+}
+
+.s-card-double-padding {
+  padding: 0 60px;
+}
+
+.s-responsive-padding {
+  padding: 0 120px;
+}
+
+.s-responsive-card-padding {
+  padding: 0 210px;
+}
+
+.s-card-pad-bottom {
+  padding-bottom: 30px;
+}
+
+.s-btn-size {
+  width: 100%;
+}
+
+.s-remove-pad {
+  padding-left: 0;
+  padding-right: 0;
 }

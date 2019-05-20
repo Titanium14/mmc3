@@ -41,6 +41,31 @@ if (localStorage.jwtToken) {
 }
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      width: 0
+    };
+
+    this.resizeHandler = this.resizing.bind(this);
+
+    // This event listener is monitoring the size of the window.
+    window.addEventListener('resize', this.resizeHandler);
+  }
+
+  resizing() {
+    this.setState({ width: window.innerWidth });
+  }
+
+  componentDidMount() {
+    this.resizing();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resizing);
+  }
+  
   render() {
     return (
       <Provider store={store}>
@@ -48,10 +73,27 @@ class App extends Component {
           <>
             <NavBar />
             <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/Budget" component={Budget} />
-              <Route exact path="/Results" component={Results} />
-              <PrivateRoute exact path="/Dashboard" component={Dashboard} />
+              <Route
+                exact
+                path="/"
+                render={() => <Home winWidth={this.state.width} />}
+              />
+              <Route
+                exact
+                path="/Budget"
+                render={() => <Budget winWidth={this.state.width} />}
+              />
+              <Route
+                exact
+                path="/Results"
+                render={() => <Results winWidth={this.state.width} />}
+              />
+              <PrivateRoute
+                exact
+                path="/Dashboard"
+                component={Dashboard}
+                winWidth={this.state.width}
+              />
               <Route exact path="/Auth/login" component={Auth} />
               <Route exact path="/Auth/register" component={Auth} />
               <Route render={() => <LoadingSpinner />} />

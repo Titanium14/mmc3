@@ -5,7 +5,7 @@ const StepGuide = props => {
   return (
     <>
       {props.step < 4 && props.step > 0 ? (
-        <section className="m-element-spacing">
+        <section className="m-element-spacing s-field-padding">
           <h1 className="m-main-color">Step {props.step}</h1>
           <h3 className="m-main-color">{props.stepDesc}</h3>
         </section>

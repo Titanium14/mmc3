@@ -47,9 +47,9 @@ class SetCategory extends Component {
     return (
       <FormGroup>
         {this.props.noCateFlag ? (
-          <Row>
+          <Row noGutters>
             <Col />
-            <Col lg={8}>
+            <Col md={8}>
               <Alert color="warning" className="text-center">
                 Please choose at least one budget category
               </Alert>
@@ -59,19 +59,29 @@ class SetCategory extends Component {
         ) : (
           <></>
         )}
-        <Row>
+        <Row noGutters={this.props.winWidth < 768 ? true : false}>
           <Col />
-          <Col lg={5}>
-            <Card>
-              <CardHeader tag="h2">Needs</CardHeader>
-              <ListGroup>{needsList}</ListGroup>
-            </Card>
+          <Col md={5}>
+            <div
+              className={
+                this.props.winWidth < 768
+                  ? 's-card-padding s-card-pad-bottom'
+                  : ''
+              }>
+              <Card>
+                <CardHeader tag="h2">Needs</CardHeader>
+                <ListGroup>{needsList}</ListGroup>
+              </Card>
+            </div>
           </Col>
-          <Col lg={5}>
-            <Card>
-              <CardHeader tag="h2">Wants</CardHeader>
-              <ListGroup>{wantsList}</ListGroup>
-            </Card>
+          <Col md={5}>
+            <div
+              className={this.props.winWidth < 768 ? 's-card-padding' : ''}>
+              <Card>
+                <CardHeader tag="h2">Wants</CardHeader>
+                <ListGroup>{wantsList}</ListGroup>
+              </Card>
+            </div>
           </Col>
           <Col />
         </Row>

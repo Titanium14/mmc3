@@ -79,7 +79,10 @@ class Register extends Component {
           Sign Up
         </CardHeader>
         <CardBody>
-          <Form noValidate onSubmit={this.onSubmit}>
+          <Form
+            noValidate
+            onSubmit={this.onSubmit}
+            className="s-pad-fields">
             <TextFieldGroup
               placeholder="Name"
               name="name"
@@ -112,7 +115,7 @@ class Register extends Component {
               onChange={this.onChange}
               error={errors.password2}
             />
-            <FormGroup row>
+            <FormGroup>
               <Button color="primary" block>
                 Sign Up
               </Button>

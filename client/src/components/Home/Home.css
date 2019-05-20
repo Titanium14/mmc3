@@ -11,6 +11,26 @@
   margin: 40px 0 15px;
 }
 
+.s-section-header-other {
+  margin: 20px 0 15px;
+}
+
 .s-text-spacing {
   margin-bottom: 10px;
+}
+
+.s-basics-padding {
+  padding: 15px;
+}
+
+.s-img-padding {
+  padding: 25px;
+}
+
+.s-title-padding {
+  padding: 0 15px;
+}
+
+.s-card-padding {
+  padding-bottom: 10px;
 }

@@ -11,21 +11,23 @@ const SetPeriod = props => {
     <>
       <PeriodFields
         stateName="budgetName"
-        fieldName="Name of Budget"
+        fieldName="Name"
         inputType="text"
-        placeholder="Enter the name of the budget here"
+        placeholder="Budget name"
         valueInput={props.budgetName}
         handleInput={props.handleInput}
         icon={nameIcon}
         error={props.errors.budgetName ? props.errors.budgetName : ''}
+        winWidth={props.winWidth}
       />
       <PeriodFields
         stateName="period"
-        fieldName="Budget By"
+        fieldName="Period"
         inputType="select"
         handleInput={props.handleInput}
         icon={calendarIcon}
         error={props.errors.period ? props.errors.period : ''}
+        winWidth={props.winWidth}
       />
       <PeriodFields
         stateName="income"
@@ -36,6 +38,7 @@ const SetPeriod = props => {
         handleInput={props.handleInput}
         icon={incomeBagIcon}
         error={props.errors.income ? props.errors.income : ''}
+        winWidth={props.winWidth}
       />
     </>
   );

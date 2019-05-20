@@ -12,10 +12,11 @@ const TextFieldGroup = ({
   type,
   onChange,
   disabled,
-  classes
+  classes,
+  singleClass
 }) => {
   return (
-    <FormGroup row>
+    <FormGroup className={singleClass}>
       {type === 'select' ? (
         <Input
           type={type}

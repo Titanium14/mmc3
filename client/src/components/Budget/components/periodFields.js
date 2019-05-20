@@ -5,33 +5,36 @@ import PropTypes from 'prop-types';
 import TextFieldGroup from '../../utils/textFieldGroup';
 
 const PeriodFields = props => {
-  
   return (
     <FormGroup>
-      <Row>
-        <Col />
-        <Col lg={2}>
-          <h3 className="m-main-color s-positioning">{props.fieldName}:</h3>
+      <Row noGutters>
+        <Col sm={3} xs={props.winWidth < 362 ? 5 : 4}>
+          <h3 className="m-main-color s-positioning text-right">
+            {props.fieldName}:
+          </h3>
         </Col>
-        <Col lg={6}>
+        <Col sm={6} xs={props.winWidth < 362 ? 7 : 4}>
           <TextFieldGroup
-            className="s-input-size"
             name={props.stateName}
             placeholder={props.placeholder}
             type={props.inputType}
             value={props.valueInput}
             onChange={props.handleInput}
             error={props.error}
+            singleClass="s-field-padding"
           />
         </Col>
-        <Col lg={2}>
-          <img
-            className="m-responsive-img s-img-positioning"
-            src={props.icon}
-            alt="..."
-          />
-        </Col>
-        <Col />
+        {props.winWidth > 362 ? (
+          <Col sm={3} xs={4}>
+            <img
+              className="m-responsive-img s-img-positioning"
+              src={props.icon}
+              alt="..."
+            />
+          </Col>
+        ) : (
+          <></>
+        )}
       </Row>
     </FormGroup>
   );

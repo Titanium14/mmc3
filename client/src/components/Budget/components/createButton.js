@@ -9,7 +9,7 @@ const CreateButton = props => {
     <Button
       name={props.name}
       onClick={props.handleBtn}
-      className="s-btn-color s-remove-event"
+      className="s-btn-color s-btn-size s-remove-event"
       color="primary"
       id={props.iconId}
       disabled={props.usedAll ? true : false}>

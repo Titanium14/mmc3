@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Col, CardGroup } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 import './Home.css';
 
@@ -8,30 +9,30 @@ import SectionHeader from './components/sectionHeader';
 import Basics from './components/basics';
 import FeatureCard from './components/featureCard';
 
-const Home = () => {
+import { creationImg, stepImg, visualImg } from './utils/exportImages';
+
+const Home = props => {
   return (
     <>
-      <Row className="s-welcome-background" noGutters>
+      <Welcome
+        imgSrc="http://mmc9.herokuapp.com/assets/app-bg2-60281578cc7e32acb5410e6b03808aa92d841fba59e94ef0db56b091368c8ab7.jpg"
+        title="Welcome to My Money Counts"
+        subtitle="Helping you manage your money better"
+        winWidth={props.winWidth}
+      />
+      <Row className="m-element-spacing-bottom" noGutters>
         <Col />
-        <Col lg={10}>
-          <Welcome
-            imgSrc="http://mmc9.herokuapp.com/assets/app-bg2-60281578cc7e32acb5410e6b03808aa92d841fba59e94ef0db56b091368c8ab7.jpg"
-            title="Welcome to My Money Counts"
-            subtitle="Helping you manage your money better"
+        <Col md={10}>
+          <SectionHeader
+            classEnable="first"
+            sectionText="The basics provided by My Money Counts"
           />
         </Col>
         <Col />
       </Row>
       <Row noGutters>
         <Col />
-        <Col lg={10}>
-          <SectionHeader sectionText="The basics provided by My Money Counts" />
-        </Col>
-        <Col />
-      </Row>
-      <Row noGutters>
-        <Col />
-        <Col lg={10}>
+        <Col md={10}>
           <Row noGutters>
             <Basics
               imgSrc="http://mmc9.herokuapp.com/assets/intro015-55b39aba01599d0ab9ebd90bf261ccecf527a51d27c69c5f979ccef5f09f4bfd.png"
@@ -53,28 +54,37 @@ const Home = () => {
         <Col />
       </Row>
       <hr />
+      <Row className="m-element-spacing-bottom" noGutters>
+        <Col />
+        <Col md={10}>
+          <SectionHeader
+            classEnable="other"
+            sectionText="What can I do with My Money Counts?"
+          />
+        </Col>
+        <Col />
+      </Row>
       <Row noGutters>
         <Col />
         <Col lg={10}>
-          <SectionHeader sectionText="What can I do with My Money Counts?" />
           <CardGroup>
             <FeatureCard
-              imgSrc="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97270&w=318&h=270&bg=333333&txtclr=666666"
+              imgSrc={creationImg}
               title="Budget Creation - Made Easier!"
               text="Enjoy a seamless and smooth experience like never before. Put your frustrations with your budgets away and enjoy creating a simple budget on My Money Counts!"
-              button="Find out more"
+              winWidth={props.winWidth}
             />
             <FeatureCard
-              imgSrc="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97270&w=318&h=270&bg=333333&txtclr=666666"
+              imgSrc={stepImg}
               title="Step-by-Step Process"
               text="When creating a budget, we'll walk you through the process step-by-step. Simply follow along and you'll be on your way to creating your own budgets!"
-              button="Find out more"
+              winWidth={props.winWidth}
             />
             <FeatureCard
-              imgSrc="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97270&w=318&h=270&bg=333333&txtclr=666666"
-              title="Rich Visualisations"
+              imgSrc={visualImg}
+              title="Rich Visuals"
               text="When you're finished making your budget, don't worry. You won't be staring at just numbers in black-and-white text. You'll have the opportunity to view your budget overview with the rich visualisations offered."
-              button="Find out more"
+              winWidth={props.winWidth}
             />
           </CardGroup>
         </Col>
@@ -82,6 +92,10 @@ const Home = () => {
       </Row>
     </>
   );
+};
+
+Home.propTypes = {
+  winWidth: PropTypes.number.isRequired
 };
 
 export default Home;

@@ -1,0 +1,31 @@
+.s-icon-padding {
+  padding-top: 3px;
+}
+
+.s-icon-margin {
+  margin-left: 20px;
+}
+
+.s-icon-margin-small {
+  margin-left: 15px;
+}
+
+.s-icon-margin-smaller {
+  margin-left: 5px;
+}
+
+.s-card-div-padding {
+  padding: 0 35px 0 35px;
+}
+
+.s-cardbody-padding {
+  padding: 15px 0;
+}
+
+.s-card-padding {
+  padding: 0 15px;
+}
+
+.s-ribbon-size {
+  width: 25%;
+}

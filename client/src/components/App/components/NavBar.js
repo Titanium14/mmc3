@@ -73,7 +73,7 @@ class NavBar extends Component {
     );
 
     return (
-      <Navbar color="light" light expand="md">
+      <Navbar color="light" light expand="lg">
         <NavbarBrand href="/">
           <h3 className="m-main-color">My Money Counts</h3>
         </NavbarBrand>
@@ -84,15 +84,6 @@ class NavBar extends Component {
               active={currentPage === '/Budget' ? true : false}
               href="/Budget">
               Create a Budget
-            </NavLink>
-            <NavLink active={currentPage === '#' ? true : false} href="#">
-              App Store
-            </NavLink>
-            <NavLink active={currentPage === '#' ? true : false} href="#">
-              Calculator
-            </NavLink>
-            <NavLink active={currentPage === '#' ? true : false} href="#">
-              Videos
             </NavLink>
           </Nav>
           <Nav className="ml-auto" navbar>

@@ -59,14 +59,14 @@ class Dashboard extends Component {
 
     setTimeout(() => {
       this.setState({ singleBud: budgetData });
-    }, 1000)
+    }, 1000);
   }
 
   render() {
     const { user } = this.props.auth;
 
     return (
-      <Row>
+      <Row className="m-element-spacing-top" noGutters>
         <Col />
         {this.state.content === 'Budget' ? (
           <DualBudgets
@@ -74,17 +74,26 @@ class Dashboard extends Component {
             singleBud={this.state.singleBud}
             onSingle={this.onSingleBudget.bind(this)}
             onBack={this.onBackClick.bind(this)}
+            winWidth={this.props.winWidth}
           />
         ) : this.state.content === 'Games' ? (
-          <DualGames onBack={this.onBackClick.bind(this)} />
+          <DualGames
+            onBack={this.onBackClick.bind(this)}
+            winWidth={this.props.winWidth}
+          />
         ) : this.state.content === 'About' ? (
-          <DualAbout user={user} onBack={this.onBackClick.bind(this)} />
+          <DualAbout
+            user={user}
+            onBack={this.onBackClick.bind(this)}
+            winWidth={this.props.winWidth}
+          />
         ) : (
           <DualDefault
             user={user}
             onBudgets={this.onBudgetClick.bind(this)}
             onGames={this.onGamesClick.bind(this)}
             onAbout={this.onAboutClick.bind(this)}
+            winWidth={this.props.winWidth}
           />
         )}
         <Col />
