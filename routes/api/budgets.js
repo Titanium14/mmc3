@@ -63,6 +63,8 @@ router.post(
   (req, res) => {
     const { errors, isValid } = validateBudgetInput(req.body);
 
+    console.log(req.body);
+
     // Check validation
     if (!isValid) {
       // Return any errors with 400 status
