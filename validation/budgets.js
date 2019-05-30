@@ -24,8 +24,6 @@ module.exports = function validateBudgetInput(data) {
     errors.income = 'A minimum of €50 must be inputted';
   }
 
-  console.log(errors);
-
   return {
     errors,
     isValid: isEmpty(errors)
