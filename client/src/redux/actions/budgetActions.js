@@ -31,7 +31,6 @@ export const getBudgets = () => dispatch => {
 
 // Set budget
 export const createBudget = budgetData => dispatch => {
-  console.log(budgetData);
   axios
     .post('/api/budgets', budgetData)
     .then(res => {

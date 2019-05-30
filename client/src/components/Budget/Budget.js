@@ -190,11 +190,7 @@ class Budget extends Component {
     e.preventDefault();
 
     if (this.state.readyFlag === 'Completed') {
-      console.log(this.state.budFields);
-      setTimeout(() => {
-        this.props.createBudget(this.state.budFields);
-      }, 300);
-      
+      this.props.createBudget(this.state.budFields);
       setTimeout(() => {
         const budgetId = this.props.budget.budget._id;
         const storedCates = this.state.cateFields;
