@@ -191,18 +191,17 @@ class Budget extends Component {
 
     if (this.state.readyFlag === 'Completed') {
       this.props.createBudget(this.state.budFields);
-      setTimeout(() => {
-        const budgetId = this.props.budget.budget._id;
-        const storedCates = this.state.cateFields;
-        storedCates.forEach(elem => this.props.createCategory(elem, budgetId));
-      }, 600);
-
-      setTimeout(() => {
-        this.props.history.push('/Results');
-      }, 900);
+      setTimeout(() => this.fillBudget(), 600);
     } else {
       this.setState({ readyFlag: 'Incomplete' });
     }
+  }
+
+  fillBudget() {
+    const budgetId = this.props.budget.budget._id;
+    const storedCates = this.state.cateFields;
+    storedCates.forEach(elem => this.props.createCategory(elem, budgetId));
+    setTimeout(() => this.props.history.push('/Results'), 600);
   }
 
   render() {
@@ -229,8 +228,8 @@ class Budget extends Component {
             <Col />
           </Row>
         ) : (
-            <></>
-          )}
+          <></>
+        )}
         <Row noGutters>
           <Col />
           <Col lg={this.state.stepNo !== 1 ? 8 : 6} md={8} sm={10} xs={12}>
@@ -252,20 +251,20 @@ class Budget extends Component {
                   winWidth={this.props.winWidth}
                 />
               ) : (
-                    <SetMoney
-                      needsArr={this.state.chosenNeedsCate}
-                      wantsArr={this.state.chosenWantsCate}
-                      income={this.state.income}
-                      inputIncome={this.state.inputIncome}
-                      ready={this.state.readyFlag}
-                      handleInput={this.handleInputChange.bind(this)}
-                      handleIncome={this.handleIncome.bind(this)}
-                      handleCates={this.handleCates.bind(this)}
-                      usedAll={this.state.usedAll}
-                      handleUsedIncome={this.handleUsedIncome.bind(this)}
-                      winWidth={this.props.winWidth}
-                    />
-                  )}
+                <SetMoney
+                  needsArr={this.state.chosenNeedsCate}
+                  wantsArr={this.state.chosenWantsCate}
+                  income={this.state.income}
+                  inputIncome={this.state.inputIncome}
+                  ready={this.state.readyFlag}
+                  handleInput={this.handleInputChange.bind(this)}
+                  handleIncome={this.handleIncome.bind(this)}
+                  handleCates={this.handleCates.bind(this)}
+                  usedAll={this.state.usedAll}
+                  handleUsedIncome={this.handleUsedIncome.bind(this)}
+                  winWidth={this.props.winWidth}
+                />
+              )}
             </Form>
           </Col>
           <Col />
@@ -295,7 +294,8 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { getBudgets, createBudget, createCategory }
-)(withRouter(Budget));
+export default connect(mapStateToProps, {
+  getBudgets,
+  createBudget,
+  createCategory
+})(withRouter(Budget));

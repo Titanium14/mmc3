@@ -76,18 +76,30 @@ router.post(
     if (req.body.period) budgetFields.period = req.body.period;
     if (req.body.income) budgetFields.income = req.body.income;
 
-    Budget.findOne({ budgetName: budgetFields.budgetName }).then(budget => {
-      // Create
+    Budget.findOne({
+      user: budgetFields.user,
+      budgetName: budgetFields.budgetName
+    })
+      .then(budget => {
+        // Create
 
-      // Check if budget exists
-      if (budget) {
-        errors.budgetName = 'That budget already exists';
-        res.status(400).json(errors);
-      } else {
-        // Save budget
-        new Budget(budgetFields).save().then(budget => res.json(budget));
-      }
-    });
+        // Check if budget exists
+        if (
+          budget &&
+          budget.user.toString() === budgetFields.user &&
+          budget.budgetName === budgetFields.budgetName
+        ) {
+          errors.budgetName = 'That budget already exists';
+          res.status(400).json(errors);
+        } else {
+          // Save budget
+          new Budget(budgetFields)
+            .save()
+            .then(budget => res.json(budget))
+            .catch(err => console.log(err));
+        }
+      })
+      .catch(err => console.log(err));
   }
 );
 
